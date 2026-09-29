@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0faa0b">
+<title>UMYU Mathematics and Computer Science Education Personal Portal</title>
+<style>
+:root{--green:#0faa0b;--dark-green:#078507;--deep-green:#056b05;--gold:#f6a623;--blue:#365574;--dark-blue:#263f59;--white:#fff;--text:#365574;--muted:#6d7782;--light:#f7f8fa;--light-green:#eaf8e8;--border:#e1e5e8;--danger:#c62828;--shadow:0 6px 20px rgba(0,0,0,.09)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--text);line-height:1.65}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+img{max-width:100%;display:block}
+.hidden{display:none!important}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ===== Welcome ===== */
+#welcomeScreen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,var(--deep-green),var(--green));display:flex;align-items:center;justify-content:center;padding:20px;transition:.5s}
+.hide{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.welcome-box{width:min(520px,100%);background:#fff;border-radius:14px;padding:38px 25px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.22)}
+.welcome-logo{width:100px;height:100px;margin:0 auto 18px;object-fit:contain;border-radius:50%;border:4px solid var(--gold)}
+.welcome-box h1{color:var(--green);font-size:25px;line-height:1.25;font-weight:900;text-transform:uppercase}
+.welcome-box p{color:var(--muted);margin:10px 0 25px}
+.enter-btn{width:100%;border:0;padding:14px 20px;color:#fff;background:var(--green);border-radius:5px;font-weight:800;text-transform:uppercase;box-shadow:0 5px 0 var(--deep-green)}
+
+/* ===== Loader (page switch) ===== */
+#loader{position:fixed;top:0;left:0;height:3px;width:0;background:var(--gold);z-index:6000;transition:width .25s ease}
+
+/* ===== Header ===== */
+.top-bar{background:var(--green);color:#fff;padding:9px 5%;font-size:14px}
+.top-inner{max-width:1200px;margin:auto;display:flex;justify-content:flex-end;gap:22px;flex-wrap:wrap}
+.site-header{background:#fff;border-bottom:4px solid var(--gold);box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.header-main{max-width:1200px;margin:auto;padding:20px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-logo{width:70px;height:70px;object-fit:contain;border-radius:50%}
+.brand h1{color:var(--green);font-size:22px;line-height:1.2;font-weight:900;text-transform:uppercase}
+.brand p{color:var(--muted);font-size:13px;letter-spacing:2px}
+.header-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{border:1px solid var(--border);background:#fff;color:var(--blue);padding:9px 12px;border-radius:5px;font-weight:700;position:relative}
+.icon-btn:hover{background:var(--green);color:#fff}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;font-size:10px;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.search-wrap{position:relative;flex:1;max-width:330px}
+.search-input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border);border-radius:5px;outline:none}
+.search-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,170,11,.1)}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search-results{position:absolute;top:105%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow);max-height:280px;overflow:auto;z-index:400;display:none}
+.search-results.show{display:block}
+.search-result-item{padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer}
+.search-result-item:last-child{border-bottom:0}
+.search-result-item:hover{background:var(--light-green)}
+.search-result-item small{display:block;color:var(--green);font-weight:800;text-transform:uppercase;font-size:11px}
+.nav-wrap{background:var(--green)}
+.main-nav{max-width:1200px;margin:auto;display:flex;align-items:center;padding:0 5%;flex-wrap:wrap}
+.nav-btn{border:0;background:transparent;color:#fff;padding:13px 16px;font-weight:700;text-transform:uppercase;font-size:13px}
+.nav-btn:hover,.nav-btn.active{background:var(--gold)}
+.mobile-toggle{display:none;width:100%;border:0;background:var(--green);color:#fff;padding:13px;font-weight:800;text-transform:uppercase}
+
+/* ===== Breadcrumb ===== */
+.breadcrumb{max-width:1200px;margin:14px auto 0;padding:0 5%;font-size:13px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap}
+.breadcrumb span{cursor:pointer;color:var(--green);font-weight:700}
+.breadcrumb span.current{color:var(--muted);cursor:default;font-weight:400}
+
+main{max-width:1200px;margin:auto;padding:10px 5% 50px}
+.page{display:none}
+.page.active{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.hero{min-height:330px;border-radius:10px;overflow:hidden;background:linear-gradient(90deg,rgba(5,107,5,.95),rgba(15,170,11,.62)),url("/storage/emulated/0/Android/data/com.fazil.htmleditor/files/Documents/UMYU-FEDU-MCSED/media/images/faculty.jpg") center/cover;display:flex;align-items:center;padding:45px;color:#fff;box-shadow:var(--shadow)}
+.hero-content{max-width:700px}
+.hero small{font-weight:800;color:#ffe3ad;text-transform:uppercase}
+.hero h2{font-size:38px;line-height:1.15;margin:10px 0;font-weight:900;text-transform:uppercase}
+.hero p{max-width:650px}
+.hero-buttons{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;padding:11px 17px;border-radius:5px;font-weight:800;text-transform:uppercase}
+.btn-green{background:var(--green);color:#fff}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-light{background:#fff;color:var(--green)}
+.btn-outline{background:transparent;border:2px solid var(--green);color:var(--green)}
+.btn:hover{filter:brightness(.95);transform:translateY(-1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.section-title{margin:30px 0 18px;padding-left:12px;border-left:5px solid var(--gold)}
+.section-title small{color:var(--green);font-weight:800;text-transform:uppercase}
+.section-title h2{color:var(--dark-blue);font-size:25px;font-weight:900;text-transform:uppercase;line-height:1.25}
+.section-title p{color:var(--muted)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:#fff;border:1px solid var(--border);border-radius:7px;box-shadow:var(--shadow);padding:20px}
+.card h3{color:var(--dark-blue);font-size:18px;font-weight:900;text-transform:uppercase}
+.card p{color:var(--muted);margin-top:6px}
+
+.summary{padding:18px;border-top:5px solid var(--green)}
+.summary:nth-child(2){border-top-color:var(--gold)}
+.summary:nth-child(3){border-top-color:var(--blue)}
+.summary:nth-child(4){border-top-color:var(--deep-green)}
+.summary strong{display:block;font-size:29px;color:var(--dark-blue)}
+.summary span{color:var(--muted);font-weight:700;text-transform:uppercase;font-size:12px}
+
+.featured{margin-top:25px;display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow);border-radius:8px;overflow:hidden}
+.featured-image{min-height:280px;background:var(--light-green);display:flex;align-items:center;justify-content:center}
+.featured-image img{width:100%;height:100%;min-height:280px;object-fit:cover}
+.placeholder{width:100%;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,#eaf8e8,#f6f6f6);color:var(--green);font-weight:900;padding:20px}
+.featured-content{padding:30px}
+.featured-content h2{color:var(--green);font-weight:900;text-transform:uppercase}
+.featured-content p{margin-top:10px;color:var(--muted)}
+
+.officer{border-top:5px solid var(--green)}
+.officer:nth-child(even){border-top-color:var(--gold)}
+.officer-photo{width:95px;height:95px;border-radius:50%;margin-bottom:15px;object-fit:cover;border:3px solid var(--gold);background:#eef3ef}
+.position{color:var(--green);font-weight:800;font-size:13px;text-transform:uppercase}
+
+.level{border:1px solid var(--border);border-bottom:5px solid var(--green);background:#fff;border-radius:7px;padding:23px;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
+.level:hover{transform:translateY(-4px);border-color:var(--green)}
+.level-icon{width:58px;height:58px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;margin-bottom:14px}
+.level:nth-child(2) .level-icon{background:var(--gold)}
+.level:nth-child(3) .level-icon{background:var(--blue)}
+.level:nth-child(4) .level-icon{background:var(--deep-green)}
+.level h3,.service h3,.about h3{color:var(--dark-blue);font-weight:900;text-transform:uppercase}
+.level-count{display:inline-block;margin-top:12px;color:var(--green);font-size:12px;font-weight:900}
+
+.service{cursor:pointer;border-left:5px solid var(--gold);transition:.2s}
+.service:hover{transform:translateY(-3px);border-left-color:var(--green)}
+.service-icon{font-size:27px;margin-bottom:8px}
+
+.announcement{border-left:5px solid var(--gold)}
+.announcement h3{color:var(--dark-blue);font-weight:900;text-transform:uppercase}
+.announcement small{color:var(--green);font-weight:700}
+
+.quick{background:var(--light-green);border:1px solid #d7ecd5;padding:22px;border-radius:7px}
+.quick p{color:var(--muted);margin-bottom:12px}
+.quick-buttons{display:flex;flex-wrap:wrap;gap:9px}
+
+.info{padding:18px;border-left:5px solid var(--green);background:var(--light-green);margin:18px 0}
+.info.gold{border-left-color:var(--gold);background:#fff8eb}
+.info.blue{border-left-color:var(--blue);background:#f2f6fa}
+
+.level-head{padding:24px;background:var(--green);color:#fff;border-radius:8px;margin-bottom:20px}
+.level-head h2{font-weight:900;text-transform:uppercase}
+.table-wrap{width:100%;overflow-x:auto;margin-top:18px}
+.course-table{width:100%;border-collapse:collapse;min-width:720px}
+.course-table th{background:var(--green);color:#fff;text-align:left;padding:12px;text-transform:uppercase;font-size:12px}
+.course-table td{padding:12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.course-table tr:nth-child(even){background:#fafafa}
+.course-table tr:hover{background:#f0f9ef}
+.detail-btn{border:0;background:var(--gold);color:#fff;padding:7px 10px;border-radius:4px;font-weight:800;font-size:12px}
+
+/* Tabs (used for timetable / semester switch inside a level) */
+.tabs{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.tab-btn{border:1px solid var(--border);background:#fff;color:var(--blue);padding:9px 15px;border-radius:5px;font-weight:800;font-size:12px;text-transform:uppercase}
+.tab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* Timetable grid */
+.timetable{width:100%;border-collapse:collapse;margin-top:14px;min-width:640px}
+.timetable th{background:var(--dark-blue);color:#fff;padding:10px;font-size:11px;text-transform:uppercase}
+.timetable td{border:1px solid var(--border);padding:10px;font-size:13px;vertical-align:top}
+.tt-slot{background:var(--light-green);border-radius:4px;padding:6px 8px;font-weight:700;color:var(--deep-green);font-size:12px}
+
+/* Resource list */
+.resource-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px solid var(--border);border-radius:6px;margin-bottom:10px}
+.resource-item:hover{border-color:var(--green)}
+.resource-info strong{display:block;color:var(--dark-blue)}
+.resource-info span{color:var(--muted);font-size:12px}
+
+/* Gallery */
+.gallery-item{border-radius:7px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
+.gallery-item .ph{min-height:150px}
+.gallery-cap{padding:10px 12px;font-size:13px;color:var(--muted);font-weight:700}
+
+/* Testimonials */
+.testimonial{border-top:5px solid var(--gold);position:relative}
+.testimonial p{font-style:italic}
+.testimonial .who{margin-top:12px;font-weight:900;color:var(--dark-blue);text-transform:uppercase;font-size:13px;font-style:normal}
+
+/* Events */
+.event-item{display:flex;gap:14px;padding:14px;border:1px solid var(--border);border-radius:6px;margin-bottom:10px;align-items:center}
+.event-date{background:var(--green);color:#fff;border-radius:6px;min-width:60px;text-align:center;padding:8px 6px;font-weight:900}
+.event-date small{display:block;font-size:10px;font-weight:700}
+.event-date strong{display:block;font-size:19px}
+
+/* GPA */
+.gpa-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.gpa-result{margin-top:16px;padding:18px;border-radius:7px;background:var(--light-green);text-align:center}
+.gpa-result strong{font-size:30px;color:var(--dark-green);display:block}
+
+.modal{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.58)}
+.modal.show{display:flex}
+.modal-box{width:min(720px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:9px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-head{background:var(--green);color:#fff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.modal-head h3{font-weight:900;text-transform:uppercase}
+.close{border:0;background:transparent;color:#fff;font-size:25px;line-height:1}
+.modal-body{padding:22px}
+.modal-body h4{color:var(--dark-blue);font-size:20px;text-transform:uppercase;font-weight:900}
+.modal-body p{color:var(--muted);margin:7px 0}
+.outline{margin:15px 0 0 20px}
+.outline li{margin:7px 0}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;color:var(--dark-blue);font-weight:800;margin-bottom:5px}
+.control{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:5px;outline:none}
+.control:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,170,11,.1)}
+textarea.control{min-height:130px;resize:vertical}
+.profile{display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center}
+.avatar{width:110px;height:110px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900}
+.upload{border:2px dashed #cdd8cf;padding:20px;text-align:center;background:#fafcfa;border-radius:7px}
+
+/* Toast */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark-blue);color:#fff;padding:13px 20px;border-radius:6px;font-weight:700;z-index:7000;opacity:0;pointer-events:none;transition:.3s;box-shadow:var(--shadow)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Login simulation */
+.login-box{max-width:420px;margin:20px auto;text-align:center}
+.demo-note{background:#fff8eb;border:1px solid #f3dca3;color:#8a6300;padding:10px 12px;border-radius:6px;font-size:13px;margin-top:14px}
+
+footer{background:var(--dark-green);color:#fff;margin-top:30px}
+.footer-inner{max-width:1200px;margin:auto;padding:35px 5%;display:grid;grid-template-columns:2fr 1fr 1fr;gap:25px}
+footer h3{font-weight:900;text-transform:uppercase;color:#fff;margin-bottom:9px}
+footer p,footer li{color:#e7f3e7}
+footer ul{list-style:none}
+footer li{margin:5px 0;cursor:pointer}
+.footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,.18);padding:13px 5%;font-size:13px}
+
+@media(max-width:850px){
+.top-inner{justify-content:center}
+.header-main{padding:15px 4%;flex-wrap:wrap}
+.brand-logo{width:55px;height:55px}
+.brand h1{font-size:17px}
+.brand p{font-size:10px}
+.header-actions .hide-mobile{display:none}
+.search-wrap{order:3;max-width:100%;flex-basis:100%}
+.mobile-toggle{display:block}
+.main-nav{display:none;flex-direction:column;align-items:stretch;padding:0}
+.main-nav.open{display:flex}
+.nav-btn{text-align:left;border-bottom:1px solid rgba(255,255,255,.15)}
+main{padding:10px 4% 35px}
+.hero{padding:30px 22px;min-height:300px}
+.hero h2{font-size:28px}
+.g4{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:1fr 1fr}
+.featured{grid-template-columns:1fr}
+.footer-inner{grid-template-columns:1fr 1fr}
+.gpa-row{grid-template-columns:1fr 1fr;grid-template-areas:"a a" "b c" "d d"}
+}
+@media(max-width:560px){
+.top-bar{font-size:12px}
+.brand h1{font-size:14px}
+.brand p{display:none}
+.icon-btn{padding:8px}
+.hero h2{font-size:23px}
+.g4,.g3,.g2{grid-template-columns:1fr}
+.featured-content{padding:22px}
+.footer-inner{grid-template-columns:1fr}
+.profile{grid-template-columns:1fr;text-align:center}
+.avatar{margin:auto}
+}
+.auth-box{max-width:420px;margin:10px auto}
+.auth-tabs{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:18px}
+.auth-tab{flex:1;border:0;background:#fff;padding:11px;font-weight:800;text-transform:uppercase;font-size:12px;color:var(--muted)}
+.auth-tab.active{background:var(--green);color:#fff}
+.chip{background:var(--light-green);color:var(--deep-green);padding:8px 12px;border-radius:5px;font-weight:800;font-size:12px;text-transform:uppercase}
+.student-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:6px;margin-bottom:8px;cursor:pointer}
+.student-item:hover{border-color:var(--green);background:var(--light-green)}
+.student-item strong{color:var(--dark-blue)}
+.student-item span{color:var(--muted);font-size:12px}
+.student-thumb{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--light-green)}
+.sem-title{color:var(--dark-blue);font-weight:900;text-transform:uppercase;font-size:16px;margin:24px 0 6px;padding-left:10px;border-left:4px solid var(--gold)}
+.total-units{color:var(--green);font-weight:800;font-size:13px;margin-top:6px}
+.gallery-item img{width:100%;height:190px;object-fit:cover;display:block}
+.gallery-item .ph{min-height:190px}
+.gallery-desc{padding:0 12px 12px;font-size:12px;color:var(--muted)}
+.ed-card{border:1px solid var(--border);border-radius:7px;padding:14px;margin-bottom:12px;background:#fafcfa}
+.ed-grid{display:grid;grid-template-columns:1fr 2fr .6fr .8fr;gap:8px;margin-bottom:8px}
+.ed-card label{display:block;font-size:11px;font-weight:800;color:var(--dark-blue);text-transform:uppercase;margin:6px 0 3px}
+.ed-card textarea.control{min-height:64px}
+.pill{display:inline-block;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:800;text-transform:uppercase}
+.pill-pub{background:var(--light-green);color:var(--deep-green)}
+.pill-draft{background:#fff8eb;color:#8a6300}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{padding:7px 11px;font-size:12px}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.nav-btn.logout{background:rgba(0,0,0,.14)}
+.q-item{border:1px solid var(--border);border-left:5px solid var(--gold);border-radius:6px;padding:14px;margin-bottom:10px;background:#fff}
+.q-item.answered{border-left-color:var(--green)}
+.q-item small{color:var(--muted);font-weight:700}
+.q-answer{margin-top:8px;padding:10px;background:var(--light-green);border-radius:5px;color:var(--deep-green);font-size:14px}
+.stu-table{width:100%;border-collapse:collapse;min-width:420px}
+.stu-table th{background:var(--dark-blue);color:#fff;text-align:left;padding:11px;text-transform:uppercase;font-size:11px}
+.stu-table td{padding:11px;border-bottom:1px solid var(--border)}
+.stu-table tr.clickable{cursor:pointer}
+.stu-table tr.clickable:hover{background:var(--light-green)}
+.readonly{background:#f3f5f6}
+.ann-badges{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+@media(max-width:560px){.ed-grid{grid-template-columns:1fr 1fr}}
+
+</style>
+<body>
+
+<div id="loader"></div>
+
+<div id="welcomeScreen">
+  <div class="welcome-box">
+    <img src="/storage/emulated/0/Android/data/com.fazil.htmleditor/files/Documents/UMYU-FEDU-MCSED/media/images/school-logo.jpg" class="welcome-logo" alt="UMYU Logo" onerror="this.style.display='none'">
+    <h1>UMYU Mathematics and Computer Science Education Personal Portal</h1>
+    <p>Academic information, courses, resources and departmental services in one place.</p>
+    <button class="enter-btn" onclick="enterPortal()">Click to Enter the Portal</button>
+  </div>
+</div>
+
+<div class="top-bar"><div class="top-inner"><span>☎ 07057208670</span><span>✉ support@umyu.edu.ng</span></div></div>
+
+<header class="site-header">
+  <div class="header-main">
+    <div class="brand">
+      <img src="/storage/emulated/0/Android/data/com.fazil.htmleditor/files/Documents/UMYU-FEDU-MCSED/media/images/school-logo.jpg" class="brand-logo" alt="UMYU Logo" onerror="this.style.display='none'">
+      <div><h1>UMYU Mathematics and Computer Science Education</h1><p>PERSONAL STUDENT PORTAL</p></div>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search pages and courses..." oninput="runSearch(this.value)" aria-label="Search the portal">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="header-actions" id="headerActions">
+      <button class="icon-btn" onclick="showNotifications()" aria-label="Notifications">🔔<span class="badge" id="notifBadge">0</span></button>
+      <button class="icon-btn" onclick="openProfile()" aria-label="Profile">👤</button>
+      <span id="authControls"></span>
+    </div>
+  </div>
+
+  <button class="mobile-toggle" onclick="toggleMenu()">☰ MENU</button>
+
+  <div class="nav-wrap">
+    <nav class="main-nav" id="mainNav">
+      <!-- PUBLIC -->
+      <button class="nav-btn active" data-groups="public" data-page="home" onclick="showPage('home')">HOME</button>
+      <button class="nav-btn" data-groups="public" data-page="about" onclick="showPage('about')">ABOUT</button>
+      <button class="nav-btn" data-groups="public student" data-page="announcements" onclick="showPage('announcements')">ANNOUNCEMENTS</button>
+      <button class="nav-btn" data-groups="public" data-page="events" onclick="showPage('events')">EVENTS</button>
+      <button class="nav-btn" data-groups="public" data-page="gallery" onclick="showPage('gallery')">EDUCATION GALLERY</button>
+      <button class="nav-btn" data-groups="public" data-page="testimonials" onclick="showPage('testimonials')">TESTIMONIALS</button>
+      <button class="nav-btn" data-groups="public" data-page="rules" onclick="showPage('rules')">RULES</button>
+      <button class="nav-btn" data-groups="public" data-page="resources" onclick="showPage('resources')">RESOURCES</button>
+      <button class="nav-btn" data-groups="public student" data-page="gpa" onclick="showPage('gpa')">GPA / CGPA CHECKER</button>
+      <button class="nav-btn" data-groups="public" data-page="contact" onclick="showPage('contact')">CONTACT</button>
+      <button class="nav-btn" data-groups="public" data-page="studentAuth" onclick="showPage('studentAuth')">UNDERGRADUATE LOGIN</button>
+      <button class="nav-btn" data-groups="public" data-page="adminAuth" onclick="showPage('adminAuth')">ADMIN LOGIN</button>
+      <!-- STUDENT PORTAL -->
+      <button class="nav-btn hidden" data-groups="student" data-page="sDashboard" onclick="showPage('sDashboard')">DASHBOARD</button>
+      <button class="nav-btn hidden" data-groups="student" data-page="sBiodata" onclick="showPage('sBiodata')">BIODATA</button>
+      <button class="nav-btn hidden" data-groups="student" data-page="sCourses" onclick="showPage('sCourses')">MY COURSES</button>
+      <button class="nav-btn hidden" data-groups="student" data-page="levels" onclick="showPage('levels')">LEVELS &amp; COURSES</button>
+      <button class="nav-btn hidden" data-groups="student" data-page="officers" onclick="showPage('officers')">ACADEMIC OFFICERS</button>
+      <button class="nav-btn hidden" data-groups="student" data-page="services" onclick="showPage('services')">SERVICES</button>
+      <button class="nav-btn hidden logout" data-groups="student" onclick="doLogout()">LOGOUT</button>
+      <!-- ADMIN PORTAL -->
+      <button class="nav-btn hidden" data-groups="admin" data-page="aInfo" onclick="showPage('aInfo')">ADMIN INFORMATION</button>
+      <button class="nav-btn hidden" data-groups="admin" data-page="aLevels" onclick="showPage('aLevels')">ACADEMIC LEVELS &amp; COURSES</button>
+      <button class="nav-btn hidden" data-groups="admin" data-page="aStudents" onclick="showPage('aStudents')">REGISTERED STUDENTS</button>
+      <button class="nav-btn hidden" data-groups="admin" data-page="aAnnouncements" onclick="showPage('aAnnouncements')">ANNOUNCEMENT CENTRE</button>
+      <button class="nav-btn hidden" data-groups="admin" data-page="aGallery" onclick="showPage('aGallery')">EDUCATION GALLERY</button>
+      <button class="nav-btn hidden" data-groups="admin" data-page="aQuestions" onclick="showPage('aQuestions')">STUDENT QUESTIONS</button>
+      <button class="nav-btn hidden" data-groups="admin" data-page="aOfficers" onclick="showPage('aOfficers')">ACADEMIC OFFICERS</button>
+      <button class="nav-btn hidden logout" data-groups="admin" onclick="doLogout()">LOGOUT</button>
+    </nav>
+  </div>
+
+  <div class="breadcrumb" id="breadcrumb"></div>
+</header>
+
+<main>
+<!-- HOME -->
+<section id="home" class="page active" data-title="Home">
+  <div class="hero">
+    <div class="hero-content">
+      <small>FACULTY OF EDUCATION</small>
+      <h2>Mathematics and Computer Science Education Personal Portal</h2>
+      <p>A clean academic portal for departmental information, announcements, the Education Gallery and student services.</p>
+      <div class="hero-buttons">
+        <button class="btn btn-light" onclick="showPage('studentAuth')">UNDERGRADUATE LOGIN</button>
+        <button class="btn btn-gold" onclick="showPage('adminAuth')">ADMIN LOGIN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><small>QUICK OVERVIEW</small><h2>ACADEMIC INFORMATION</h2><p>Only the most important information is displayed on the dashboard.</p></div>
+  <div class="grid g4">
+    <div class="card summary"><strong>100L</strong><span>First Year</span></div>
+    <div class="card summary"><strong>200L</strong><span>Second Year</span></div>
+    <div class="card summary"><strong>300L</strong><span>Third Year</span></div>
+    <div class="card summary"><strong>400L</strong><span>Coming Soon</span></div>
+  </div>
+
+  <div class="featured">
+    <div class="featured-image"><img src="/storage/emulated/0/Android/data/com.fazil.htmleditor/files/Documents/UMYU-FEDU-MCSED/media/images/faculty.jpg" alt="Faculty of Education building" onerror="this.outerHTML='&lt;div class=placeholder&gt;FACULTY OF EDUCATION PHOTO&lt;br&gt;&lt;small&gt;image/Faculty.jpg&lt;/small&gt;&lt;/div&gt;'"></div>
+    <div class="featured-content">
+      <h2>FACULTY OF EDUCATION</h2>
+      <p>The Faculty of Education supports teaching, learning, professional preparation and educational development.</p>
+      <p>This portal keeps detailed academic information inside menus so the dashboard remains clear and easy to use.</p>
+      <button class="btn btn-green" style="margin-top:15px" onclick="showPage('about')">READ MORE</button>
+    </div>
+  </div>
+
+  <div class="section-title"><small>KEEP IT SIMPLE</small><h2>USE THE MENU TO FIND MORE</h2><p>Announcements, the Education Gallery, rules and resources are kept inside their own pages.</p></div>
+  <div class="quick">
+    <div class="quick-buttons">
+      <button class="btn btn-green" onclick="showPage('announcements')">ANNOUNCEMENTS</button>
+      <button class="btn btn-blue" onclick="showPage('gallery')">EDUCATION GALLERY</button>
+      <button class="btn btn-gold" onclick="showPage('resources')">RESOURCES</button>
+      <button class="btn btn-green" onclick="showPage('gpa')">GPA / CGPA CHECKER</button>
+      <button class="btn btn-blue" onclick="showPage('studentAuth')">STUDENT PORTAL</button>
+    </div>
+  </div>
+
+  <div class="section-title"><small>RECENT</small><h2>LATEST ANNOUNCEMENTS</h2></div>
+  <div id="homeAnnList" class="grid g2"></div>
+
+  <div class="section-title"><small>QUESTIONS</small><h2>STUDENT QUESTION SUMMARY</h2><p>Log in to your Personal Portal to see your own questions and answers.</p></div>
+  <div class="grid g2">
+    <div class="card"><h3>⏳ PENDING QUESTIONS</h3><p id="pendingCount">—</p></div>
+    <div class="card"><h3>✓ ANSWERED QUESTIONS</h3><p id="answeredCount">—</p></div>
+  </div>
+</section>
+<!-- ABOUT -->
+<section id="about" class="page" data-title="About">
+  <div class="section-title"><small>ABOUT</small><h2>ABOUT THE DEPARTMENT</h2><p>Education and Computer Science Education information.</p></div>
+  <div class="grid g2">
+    <div class="card about"><h3>EDUCATION STUDENTS</h3><p>Education students are future teachers, mentors, and leaders. Your work is about more than delivering lessons—it is about understanding learners, building inclusive classrooms, assessing growth, and helping students believe in themselves. Stay reflective, ethical, and adaptable. The impact you make may not always be immediate, but it lasts.</p></div>
+    <div class="card about"><h3>COMPUTER SCIENCE EDUCATION STUDENTS</h3><p>You stand at the intersection of education and technology. You must learn how people learn while also mastering programming, algorithms, data, and digital systems. Your role is to make computing accessible, not intimidating—teaching problem-solving, computational thinking, and responsible technology use.</p></div>
+  </div>
+  <div class="section-title"><small>ABOUT</small><h2>MATHEMATICS EDUCATION STUDENTS</h2></div>
+  <div class="card about"><p>You are training to make mathematics clear, logical and enjoyable for the next generation. Alongside core mathematics you study how learners build number sense and abstract reasoning — strong content knowledge plus strong pedagogy is what makes a great mathematics teacher.</p></div>
+
+  <div class="section-title"><small>FACULTY</small><h2>FACULTY OF EDUCATION</h2></div>
+  <div class="card">
+    <div class="upload">
+      <div class="placeholder" id="facultyPreview">FACULTY PHOTO PLACEHOLDER</div>
+      <input type="file" accept="image/*" onchange="preview(this,'facultyPreview')" aria-label="Upload faculty photo">
+      <p>Local preview only. The Admin uploads the official photo through Education Gallery Management.</p>
+    </div>
+  </div>
+
+  <div class="section-title"><small>VISION & MISSION</small><h2>ACADEMIC DIRECTION</h2></div>
+  <div class="grid g2">
+    <div class="card"><h3>VISION</h3><p>To support quality learning, professional development and responsible use of knowledge and technology.</p></div>
+    <div class="card"><h3>MISSION</h3><p>To provide useful academic information, learning resources and a clear connection to departmental services.</p></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="page" data-title="Services">
+  <div class="section-title"><small>DEPARTMENTAL</small><h2>SERVICES</h2><p>Common student services. Tap a service for details.</p></div>
+  <div class="grid g3">
+    <div class="card service" onclick="openServiceModal('registration')"><div class="service-icon">📝</div><h3>Course Registration</h3><p>Guidance on registering courses each semester.</p></div>
+    <div class="card service" onclick="openServiceModal('transcript')"><div class="service-icon">📄</div><h3>Transcript Request</h3><p>How to request an official transcript.</p></div>
+    <div class="card service" onclick="openServiceModal('result')"><div class="service-icon">📊</div><h3>Result Checking</h3><p>Steps to check semester results.</p></div>
+    <div class="card service" onclick="openServiceModal('advising')"><div class="service-icon">🎓</div><h3>Academic Advising</h3><p>Book a session with your academic adviser.</p></div>
+    <div class="card service" onclick="openServiceModal('id')"><div class="service-icon">🪪</div><h3>ID Card Services</h3><p>Replacement and verification of student ID cards.</p></div>
+    <div class="card service" onclick="openServiceModal('complaint')"><div class="service-icon">📮</div><h3>Complaints & Feedback</h3><p>Submit a complaint or general feedback.</p></div>
+  </div>
+</section>
+<!-- EVENTS -->
+<section id="events" class="page" data-title="Events Calendar">
+  <div class="section-title"><small>SCHEDULE</small><h2>EVENTS CALENDAR</h2><p>Upcoming exams, deadlines and seminars.</p></div>
+  <div id="eventsList"></div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="page" data-title="Testimonials">
+  <div class="section-title"><small>ALUMNI VOICES</small><h2>STUDENT TESTIMONIALS</h2><p>What graduates say about the department.</p></div>
+  <div class="grid g3" id="testimonialGrid"></div>
+</section>
+
+<!-- RULES -->
+<section id="rules" class="page" data-title="Rules & Regulations">
+  <div class="section-title"><small>GUIDELINES</small><h2>RULES & REGULATIONS</h2><p>General academic conduct expectations.</p></div>
+  <div class="info"><strong>Attendance:</strong> A minimum of 75% lecture attendance is required to sit for examinations.</div>
+  <div class="info gold"><strong>Academic Integrity:</strong> Examination malpractice and plagiarism attract disciplinary action.</div>
+  <div class="info blue"><strong>Dress Code:</strong> Students are expected to dress decently within the department and campus.</div>
+  <div class="info"><strong>Assignments:</strong> Late submissions may attract a penalty unless prior approval is obtained.</div>
+  <div class="info gold"><strong>Examinations:</strong> Students must carry a valid ID card to every examination.</div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources" class="page" data-title="Resources">
+  <div class="section-title"><small>DOWNLOADS</small><h2>LEARNING RESOURCES</h2><p>Past questions, notes and project guides.</p></div>
+  <div id="resourceList"></div>
+</section>
+
+<!-- GPA / CGPA CHECKER -->
+<section id="gpa" class="page" data-title="GPA / CGPA Checker">
+  <div class="section-title"><small>SIMULATION</small><h2>SEMESTER GPA CHECKER</h2><p>Enter your course grades to calculate this semester's GPA. This is a local demo calculation only — it is not your official result.</p></div>
+  <div class="card">
+    <div id="gpaRows"></div>
+    <button class="btn btn-outline" onclick="addGpaRow()" style="margin-top:6px">+ ADD COURSE</button>
+    <div style="margin-top:16px"><button class="btn btn-green" onclick="calculateGpa()">CALCULATE GPA</button></div>
+    <div class="gpa-result hidden" id="gpaResult"><span style="color:var(--muted);font-weight:700;text-transform:uppercase;font-size:12px">Estimated Semester GPA</span><strong id="gpaValue">0.00</strong></div>
+  </div>
+  <div class="section-title"><small>CUMULATIVE</small><h2>CGPA CHECKER</h2><p>Combine your previous CGPA with this semester's GPA to estimate your new CGPA.</p></div>
+  <div class="card">
+    <div class="form-group"><label>Previous CGPA (leave as 0 if this is your first semester)</label><input class="control" id="cgpaPrev" type="number" step="0.01" min="0" max="5" placeholder="e.g. 3.42"></div>
+    <div class="form-group"><label>Total Units Completed Before This Semester</label><input class="control" id="cgpaPrevUnits" type="number" min="0" placeholder="e.g. 45"></div>
+    <div class="form-group"><label>This Semester's GPA</label><input class="control" id="cgpaCurrentGpa" type="number" step="0.01" min="0" max="5" placeholder="e.g. 3.60"></div>
+    <div class="form-group"><label>This Semester's Units</label><input class="control" id="cgpaCurrentUnits" type="number" min="0" placeholder="e.g. 18"></div>
+    <button class="btn btn-green" onclick="calculateCgpa()">CALCULATE CGPA</button>
+    <div class="gpa-result hidden" id="cgpaResult"><span style="color:var(--muted);font-weight:700;text-transform:uppercase;font-size:12px">Estimated New CGPA</span><strong id="cgpaValue">0.00</strong></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="page" data-title="Contact & Feedback">
+  <div class="section-title"><small>REACH US</small><h2>CONTACT & FEEDBACK</h2><p>Send a message to the department.</p></div>
+  <div class="card">
+    <form onsubmit="submitContact(event)">
+      <div class="form-group"><label for="cName">Full Name</label><input class="control" id="cName" required></div>
+      <div class="form-group"><label for="cEmail">Email</label><input class="control" type="email" id="cEmail" required></div>
+      <div class="form-group"><label for="cSubject">Subject</label><input class="control" id="cSubject" required></div>
+      <div class="form-group"><label for="cMsg">Message</label><textarea class="control" id="cMsg" required></textarea></div>
+      <button class="btn btn-green" type="submit">SEND MESSAGE</button>
+    </form>
+  </div>
+</section>
+
+<!-- ANNOUNCEMENTS -->
+<section id="announcements" class="page" data-title="Announcements">
+  <div class="section-title"><small>UPDATES</small><h2>ANNOUNCEMENTS</h2><p>Latest notices published by the department.</p></div>
+  <div id="publicAnnList" class="grid g2"><p style="color:var(--muted)">Loading announcements…</p></div>
+</section>
+
+<!-- EDUCATION GALLERY (public) -->
+<section id="gallery" class="page" data-title="Education Gallery">
+  <div class="section-title"><small>MOMENTS</small><h2>EDUCATION GALLERY</h2><p>Photographs from education and departmental activities.</p></div>
+  <div class="grid g3" id="galleryGrid"></div>
+</section>
+
+<!-- UNDERGRADUATE LOGIN / REGISTER -->
+<section id="studentAuth" class="page" data-title="Undergraduate Login">
+  <div class="section-title"><small>STUDENT PORTAL</small><h2>UNDERGRADUATE LOGIN</h2><p>For registered CSED and MTHED students. You can browse the public pages without logging in.</p></div>
+  <div class="card auth-box">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabSLogin" onclick="setAuthTab('login')">LOG IN</button>
+      <button class="auth-tab" id="tabSRegister" onclick="setAuthTab('register')">REGISTER</button>
+    </div>
+
+    <div id="sLoginForm">
+      <div class="form-group"><label>Matric Number</label><input class="control" id="slMatric" placeholder="e.g. CSED/23/0001" oninput="this.value=this.value.toUpperCase()" autocomplete="off"></div>
+      <div class="form-group"><label>School Email</label><input class="control" id="slEmail" type="email" autocomplete="email"></div>
+      <div class="form-group">
+        <label>Password</label>
+        <div style="position:relative">
+          <input class="control" id="slPass" type="password" style="padding-right:44px" autocomplete="current-password">
+          <button type="button" onclick="togglePass('slPass',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--muted);font-size:18px;padding:4px 8px">👁</button>
+        </div>
+      </div>
+      <button class="btn btn-green" style="width:100%" onclick="doStudentLogin()">LOG IN</button>
+      <div id="sLoginStatus" style="margin-top:12px"></div>
+    </div>
+
+    <div id="sRegisterForm" class="hidden">
+      <div class="form-group"><label>Full Name</label><input class="control" id="srName"></div>
+      <div class="form-group">
+        <label>Matric Number</label>
+        <input class="control" id="srMatric" placeholder="e.g. CSED/23/0001" oninput="this.value=this.value.toUpperCase()" autocomplete="off">
+        <p style="color:var(--muted);font-size:12px;margin-top:5px">Capital or small letters both work.</p>
+      </div>
+      <div class="form-group"><label>School Email</label><input class="control" id="srEmail" type="email" autocomplete="email"></div>
+      <div class="form-group"><label>Department</label>
+        <select class="control" id="srDept" onchange="syncProgramme()">
+          <option value="">— Select —</option>
+          <option value="CSED">Computer Science Education (CSED)</option>
+          <option value="MTHED">Mathematics Education (MTHED)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Programme</label><input class="control readonly" id="srProgramme" readonly placeholder="Chosen automatically from department"></div>
+      <div class="form-group"><label>Level</label>
+        <select class="control" id="srLevel"><option value="">— Select —</option><option>100L</option><option>200L</option><option>300L</option><option>400L</option></select>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div style="position:relative">
+          <input class="control" id="srPass" type="password" style="padding-right:44px" autocomplete="new-password">
+          <button type="button" onclick="togglePass('srPass',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--muted);font-size:18px;padding:4px 8px">👁</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <div style="position:relative">
+          <input class="control" id="srPass2" type="password" style="padding-right:44px" autocomplete="new-password">
+          <button type="button" onclick="togglePass('srPass2',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--muted);font-size:18px;padding:4px 8px">👁</button>
+        </div>
+        <p style="color:var(--muted);font-size:12px;margin-top:5px">Choose your own password (at least 6 characters). Nobody else can see it.</p>
+      </div>
+      <button class="btn btn-green" style="width:100%" onclick="doStudentRegister()">CREATE MY PERSONAL PORTAL</button>
+      <div id="sRegisterStatus" style="margin-top:12px"></div>
+    </div>
+  </div>
+</section>
+<!-- ADMIN LOGIN -->
+<section id="adminAuth" class="page" data-title="Admin Login">
+  <div class="section-title"><small>ADMINISTRATION</small><h2>ADMIN LOGIN</h2><p>For authorised portal administrators only.</p></div>
+  <div class="card auth-box">
+    <div class="form-group"><label>Admin Email</label><input class="control" id="alEmail" type="email" autocomplete="email"></div>
+    <div class="form-group">
+      <label>Password</label>
+      <div style="position:relative">
+        <input class="control" id="alPass" type="password" style="padding-right:44px" autocomplete="current-password">
+        <button type="button" onclick="togglePass('alPass',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--muted);font-size:18px;padding:4px 8px">👁</button>
+      </div>
+    </div>
+    <button class="btn btn-blue" style="width:100%" onclick="doAdminLogin()">ADMIN LOG IN</button>
+    <div id="aLoginStatus" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<!-- STUDENT: DASHBOARD -->
+<section id="sDashboard" class="page" data-title="Dashboard">
+  <div class="section-title"><small>MY PERSONAL PORTAL</small><h2>DASHBOARD</h2></div>
+  <div class="card">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div class="avatar" id="dAvatar" style="overflow:hidden">S</div>
+      <div><h3 id="dName">—</h3><p id="dMeta" style="color:var(--muted)">—</p></div>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card summary"><strong id="dLevel">—</strong><span>Current Level</span></div>
+    <div class="card summary"><strong id="dCourseCount">0</strong><span>Courses This Level</span></div>
+    <div class="card summary"><strong id="dUnits">0</strong><span>Total Units</span></div>
+  </div>
+  <div class="section-title"><small>MY PROGRAMME</small><h2 id="dAboutTitle">EDUCATION STUDENTS</h2></div>
+  <div class="card"><p id="dAboutText" style="color:var(--muted)">—</p></div>
+  <div class="section-title"><small>LATEST</small><h2>ANNOUNCEMENTS</h2></div>
+  <div id="dAnnList" class="grid g2"></div>
+  <div class="section-title"><small>QUESTIONS</small><h2>MY QUESTIONS</h2><p>Questions you sent to the department and their answers.</p></div>
+  <div style="margin-bottom:12px"><button class="btn btn-gold" onclick="openQuestion()">ASK A QUESTION</button></div>
+  <div id="dQuestions"></div>
+</section>
+
+<!-- STUDENT: BIODATA -->
+<section id="sBiodata" class="page" data-title="Biodata">
+  <div class="section-title"><small>MY RECORD</small><h2>BIODATA</h2><p>Your information is stored securely in the portal database.</p></div>
+  <div class="card">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <div class="avatar" id="bAvatar" style="overflow:hidden;cursor:pointer" onclick="$('bPhotoInput').click()">S</div>
+      <div><button class="btn btn-outline btn-sm" onclick="$('bPhotoInput').click()">CHANGE PROFILE PHOTO</button><p style="color:var(--muted);font-size:12px;margin-top:6px">Tap the photo to upload a new one.</p></div>
+    </div>
+    <input type="file" id="bPhotoInput" accept="image/*" class="hidden" onchange="uploadMyPhoto(this,'bAvatar')">
+    <div id="bPhotoStatus"></div>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="form-group"><label>Full Name</label><input class="control" id="bName"></div>
+      <div class="form-group"><label>Matric Number</label><input class="control readonly" id="bMatric" readonly></div>
+      <div class="form-group"><label>School Email</label><input class="control readonly" id="bEmail" readonly></div>
+      <div class="form-group"><label>Phone Number</label><input class="control" id="bPhone"></div>
+      <div class="form-group"><label>Department</label>
+        <select class="control" id="bDept" onchange="syncBioProgramme()"><option value="">— Select —</option><option value="CSED">Computer Science Education (CSED)</option><option value="MTHED">Mathematics Education (MTHED)</option></select>
+      </div>
+      <div class="form-group"><label>Programme</label><input class="control readonly" id="bProgramme" readonly></div>
+      <div class="form-group"><label>Level</label>
+        <select class="control" id="bLevel"><option>100L</option><option>200L</option><option>300L</option><option>400L</option></select>
+      </div>
+      <div class="form-group"><label>Gender</label>
+        <select class="control" id="bGender"><option value="">— Select —</option><option>Male</option><option>Female</option></select>
+      </div>
+      <div class="form-group"><label>State of Origin</label><input class="control" id="bState"></div>
+      <div class="form-group"><label>Local Government Area</label><input class="control" id="bLga"></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Home Address</label><input class="control" id="bAddress"></div>
+      <div class="form-group"><label>Guardian Name</label><input class="control" id="bGuardianName"></div>
+      <div class="form-group"><label>Guardian Phone</label><input class="control" id="bGuardianPhone"></div>
+    </div>
+    <button class="btn btn-green" onclick="saveBiodata()">SAVE BIODATA</button>
+    <div id="bStatus" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<!-- STUDENT: MY COURSES -->
+<section id="sCourses" class="page" data-title="My Courses">
+  <div class="section-title"><small>ACADEMIC</small><h2>MY COURSES</h2><p id="sCoursesSub">Courses for your programme and level.</p></div>
+  <div class="tabs">
+    <button class="tab-btn my-sem-btn active" data-sem="all" onclick="setMySem(this,'all')">ALL</button>
+    <button class="tab-btn my-sem-btn" data-sem="1st" onclick="setMySem(this,'1st')">FIRST SEMESTER</button>
+    <button class="tab-btn my-sem-btn" data-sem="2nd" onclick="setMySem(this,'2nd')">SECOND SEMESTER</button>
+  </div>
+  <div id="myCoursesBox"></div>
+</section>
+
+<!-- STUDENT: LEVELS & COURSES -->
+<section id="levels" class="page" data-title="Levels & Courses">
+  <div class="section-title"><small>ACADEMICS</small><h2>LEVELS &amp; COURSES</h2><p id="levelsSub">Select a level to view its courses.</p></div>
+  <div class="grid g4">
+    <div class="level" onclick="openLevel(100)" tabindex="0" role="button"><div class="level-icon">100L</div><h3>100 LEVEL</h3><p>First-year courses.</p><span class="level-count">VIEW COURSES</span></div>
+    <div class="level" onclick="openLevel(200)" tabindex="0" role="button"><div class="level-icon">200L</div><h3>200 LEVEL</h3><p>Second-year courses.</p><span class="level-count">VIEW COURSES</span></div>
+    <div class="level" onclick="openLevel(300)" tabindex="0" role="button"><div class="level-icon">300L</div><h3>300 LEVEL</h3><p>Third-year courses.</p><span class="level-count">VIEW COURSES</span></div>
+    <div class="level" onclick="openLevel(400)" tabindex="0" role="button"><div class="level-icon">400L</div><h3>400 LEVEL</h3><p>Final-year courses.</p><span class="level-count">COMING SOON</span></div>
+  </div>
+</section>
+
+<section id="levelDetails" class="page" data-title="Level Details">
+  <button class="btn btn-green" onclick="showPage('levels')">← BACK TO LEVELS</button>
+  <div class="level-head"><h2 id="levelTitle">LEVEL</h2><p id="levelDesc">Course information.</p></div>
+  <div class="tabs">
+    <button class="tab-btn lv-sem-btn active" data-sem="all" onclick="setLvSem(this,'all')">ALL</button>
+    <button class="tab-btn lv-sem-btn" data-sem="1st" onclick="setLvSem(this,'1st')">FIRST SEMESTER</button>
+    <button class="tab-btn lv-sem-btn" data-sem="2nd" onclick="setLvSem(this,'2nd')">SECOND SEMESTER</button>
+  </div>
+  <div id="lvCoursesBox"></div>
+</section>
+
+<!-- STUDENT: ACADEMIC OFFICERS -->
+<section id="officers" class="page" data-title="Academic Officers">
+  <div class="section-title"><small>OFFICIAL INFORMATION</small><h2>ACADEMIC OFFICERS</h2><p>Visible to logged-in students only.</p></div>
+  <div class="grid g3" id="officersGrid"></div>
+</section>
+
+<!-- ADMIN: INFORMATION -->
+<section id="aInfo" class="page" data-title="Admin Information">
+  <div class="section-title"><small>ADMIN DASHBOARD</small><h2>ADMIN INFORMATION</h2></div>
+  <div class="card">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <div class="avatar" id="aAvatar" style="overflow:hidden;cursor:pointer" onclick="$('aPhotoInput').click()">A</div>
+      <div><button class="btn btn-outline btn-sm" onclick="$('aPhotoInput').click()">CHANGE PROFILE PHOTO</button></div>
+    </div>
+    <input type="file" id="aPhotoInput" accept="image/*" class="hidden" onchange="uploadMyPhoto(this,'aAvatar')">
+    <div id="aPhotoStatus"></div>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="form-group"><label>Admin Name</label><input class="control" id="aiName"></div>
+      <div class="form-group"><label>Admin Email</label><input class="control readonly" id="aiEmail" readonly></div>
+      <div class="form-group"><label>Admin Role</label><input class="control readonly" id="aiRole" readonly value="ADMIN"></div>
+      <div class="form-group"><label>Contact Phone</label><input class="control" id="aiPhone"></div>
+    </div>
+    <button class="btn btn-green" onclick="saveAdminInfo()">SAVE ADMIN INFORMATION</button>
+    <div id="aiStatus" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<!-- ADMIN: LEVELS & COURSES -->
+<section id="aLevels" class="page" data-title="Academic Levels & Courses">
+  <div class="section-title"><small>ADMIN DASHBOARD</small><h2>ACADEMIC LEVELS &amp; COURSES</h2><p>Choose a programme and a level to view or edit its courses.</p></div>
+  <div class="tabs">
+    <button class="tab-btn ad-dept-btn active" data-dept="CSED" onclick="setAdminDept(this,'CSED')">CSED</button>
+    <button class="tab-btn ad-dept-btn" data-dept="MTHED" onclick="setAdminDept(this,'MTHED')">MTHED</button>
+  </div>
+  <div class="grid g4" style="margin-top:14px">
+    <div class="level" onclick="openCourseEditor(100)" tabindex="0" role="button"><div class="level-icon">100L</div><h3>LEVEL 100</h3><span class="level-count">MANAGE COURSES</span></div>
+    <div class="level" onclick="openCourseEditor(200)" tabindex="0" role="button"><div class="level-icon">200L</div><h3>LEVEL 200</h3><span class="level-count">MANAGE COURSES</span></div>
+    <div class="level" onclick="openCourseEditor(300)" tabindex="0" role="button"><div class="level-icon">300L</div><h3>LEVEL 300</h3><span class="level-count">MANAGE COURSES</span></div>
+    <div class="level" onclick="openCourseEditor(400)" tabindex="0" role="button"><div class="level-icon">400L</div><h3>LEVEL 400</h3><span class="level-count">MANAGE COURSES</span></div>
+  </div>
+</section>
+
+<section id="aCourseEditor" class="page" data-title="Course Editor">
+  <button class="btn btn-green" onclick="showPage('aLevels')">← BACK TO LEVELS</button>
+  <div class="level-head"><h2 id="edTitle">COURSES</h2><p>Edit, add or remove courses. Changes appear on the student portal after you press SAVE.</p></div>
+  <div id="edList"></div>
+  <div class="row-actions">
+    <button class="btn btn-outline" onclick="addEditorCourse()">+ ADD COURSE</button>
+    <button class="btn btn-green" onclick="saveCourseEditor()">SAVE THIS LEVEL</button>
+    <button class="btn btn-danger btn-sm" onclick="resetCourseEditor()">RESET TO DEFAULT</button>
+  </div>
+  <div id="edStatus" style="margin-top:12px"></div>
+</section>
+
+<!-- ADMIN: REGISTERED STUDENTS -->
+<section id="aStudents" class="page" data-title="Registered Students">
+  <div class="section-title"><small>ADMIN DASHBOARD</small><h2>REGISTERED STUDENTS</h2><p>Choose a level to see the students registered in it.</p></div>
+  <div class="tabs">
+    <button class="tab-btn stu-level-btn" data-level="100L" onclick="pickStudentLevel(this,'100L')">LEVEL 100</button>
+    <button class="tab-btn stu-level-btn" data-level="200L" onclick="pickStudentLevel(this,'200L')">LEVEL 200</button>
+    <button class="tab-btn stu-level-btn" data-level="300L" onclick="pickStudentLevel(this,'300L')">LEVEL 300</button>
+    <button class="tab-btn stu-level-btn" data-level="400L" onclick="pickStudentLevel(this,'400L')">LEVEL 400</button>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn stu-dept-btn active" data-dept="ALL" onclick="pickStudentDept(this,'ALL')">ALL PROGRAMMES</button>
+    <button class="tab-btn stu-dept-btn" data-dept="CSED" onclick="pickStudentDept(this,'CSED')">CSED</button>
+    <button class="tab-btn stu-dept-btn" data-dept="MTHED" onclick="pickStudentDept(this,'MTHED')">MTHED</button>
+  </div>
+  <div class="form-group" style="margin-top:14px"><input class="control" id="stuSearch" placeholder="Search by name or matric number…" oninput="renderStudentTable()"></div>
+  <div id="stuTableBox"><p style="color:var(--muted)">Select a level above.</p></div>
+  <div class="row-actions"><button class="btn btn-outline btn-sm" onclick="loadAllUsers()">REFRESH LIST</button></div>
+</section>
+
+<!-- ADMIN: ANNOUNCEMENT CENTRE -->
+<section id="aAnnouncements" class="page" data-title="Announcement Centre">
+  <div class="section-title"><small>ADMIN DASHBOARD</small><h2>ANNOUNCEMENT CENTRE</h2><p>Published announcements appear on the public portal and student dashboards immediately.</p></div>
+  <div class="card">
+    <h3 id="annFormTitle" style="margin-bottom:10px">NEW ANNOUNCEMENT</h3>
+    <div class="form-group"><label>Title</label><input class="control" id="annTitle" placeholder="IMPORTANT ANNOUNCEMENT"></div>
+    <div class="form-group"><label>Category</label><input class="control" id="annCat" placeholder="e.g. Academic, Exams, General"></div>
+    <div class="form-group"><label>Message</label><textarea class="control" id="annBody" style="min-height:110px" placeholder="Students are hereby informed that..."></textarea></div>
+    <div class="row-actions">
+      <button class="btn btn-green" onclick="saveAnnouncement(true)">PUBLISH</button>
+      <button class="btn btn-outline" onclick="saveAnnouncement(false)">SAVE AS DRAFT</button>
+      <button class="btn btn-outline btn-sm" onclick="resetAnnouncementForm()">CLEAR</button>
+    </div>
+    <div id="annStatus" style="margin-top:12px"></div>
+  </div>
+  <div class="section-title"><small>MANAGE</small><h2>ALL ANNOUNCEMENTS</h2></div>
+  <div id="adminAnnList"></div>
+</section>
+
+<!-- ADMIN: EDUCATION GALLERY -->
+<section id="aGallery" class="page" data-title="Education Gallery Management">
+  <div class="section-title"><small>ADMIN DASHBOARD</small><h2>EDUCATION GALLERY MANAGEMENT</h2><p>Upload or change the six gallery photographs shown on the public portal.</p></div>
+  <div id="adminGalleryBox" class="grid g2"></div>
+</section>
+
+<!-- ADMIN: STUDENT QUESTIONS -->
+<section id="aQuestions" class="page" data-title="Student Questions">
+  <div class="section-title"><small>ADMIN DASHBOARD</small><h2>STUDENT QUESTIONS</h2><p>Answer questions sent by students.</p></div>
+  <div id="adminQuestions"></div>
+</section>
+
+<!-- ADMIN: ACADEMIC OFFICERS -->
+<section id="aOfficers" class="page" data-title="Academic Officers">
+  <div class="section-title"><small>ADMIN DASHBOARD</small><h2>ACADEMIC OFFICERS</h2><p>Names shown to students under Academic Officers.</p></div>
+  <div class="card">
+    <div class="grid g2">
+      <div class="form-group"><label>Faculty Dean</label><input class="control" id="ofDean"></div>
+      <div class="form-group"><label>Faculty Exam Officer</label><input class="control" id="ofFacultyExam"></div>
+      <div class="form-group"><label>H.O.D</label><input class="control" id="ofHod"></div>
+      <div class="form-group"><label>Department Exam Officer</label><input class="control" id="ofDeptExam"></div>
+      <div class="form-group"><label>Level Adviser</label><input class="control" id="ofLevelAdviser"></div>
+    </div>
+    <button class="btn btn-green" onclick="saveOfficers()">SAVE OFFICERS</button>
+    <div id="ofStatus" style="margin-top:12px"></div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- Student Detail Modal -->
+<div class="modal" id="studentDetailModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Student Profile</h3><button class="close" onclick="closeModal('studentDetailModal')">&times;</button></div>
+    <div class="modal-body" id="studentDetailBody"></div>
+  </div>
+</div>
+
+<!-- Question Modal -->
+<div class="modal" id="questionModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Ask a Question</h3><button class="close" onclick="closeModal('questionModal')">&times;</button></div>
+    <div class="modal-body">
+      <form onsubmit="submitQuestion(event)">
+        <div class="form-group"><label for="qCourse">Related Course (optional)</label><input class="control" id="qCourse" placeholder="e.g. COS 201"></div>
+        <div class="form-group"><label for="qText">Your Question</label><textarea class="control" id="qText" required></textarea></div>
+        <button class="btn btn-green" type="submit">SUBMIT QUESTION</button>
+        <div id="qStatus" style="margin-top:12px"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Course Detail Modal -->
+<div class="modal" id="courseModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="courseModalTitle">Course</h3><button class="close" onclick="closeModal('courseModal')">&times;</button></div>
+    <div class="modal-body" id="courseModalBody"></div>
+  </div>
+</div>
+
+<!-- Service Modal -->
+<div class="modal" id="serviceModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="serviceModalTitle">Service</h3><button class="close" onclick="closeModal('serviceModal')">&times;</button></div>
+    <div class="modal-body" id="serviceModalBody"></div>
+  </div>
+</div>
+
+<!-- Notifications Modal -->
+<div class="modal" id="notifModal">
+  <div class="modal-box" style="width:min(420px,100%)">
+    <div class="modal-head"><h3>Notifications</h3><button class="close" onclick="closeModal('notifModal')">&times;</button></div>
+    <div class="modal-body" id="notifBody"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h3>UMYU Mathematics and Computer Science Education</h3>
+      <p>Faculty of Education, Umaru Musa Yar'adua University, Katsina. Supporting quality learning, professional development and responsible use of technology.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <ul>
+        <li onclick="showPage('about')">About</li>
+        <li onclick="showPage('announcements')">Announcements</li>
+        <li onclick="showPage('gallery')">Education Gallery</li>
+        <li onclick="showPage('resources')">Resources</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul>
+        <li>☎ 08135299324</li>
+        <li>✉ csed23@students.umyu.edu.ng</li>
+        <li onclick="showPage('contact')">Send Feedback</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <strong>PORTAL CREATED BY MMSAYAYA</strong> &nbsp;•&nbsp; Contact: 08135299324<br>
+    © UMYU Mathematics and Computer Science Education Portal. All rights reserved.
+  </div>
+</footer>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+/* ===================== HELPERS ===================== */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]; }); }
+function val(id){ return ($(id).value||'').trim(); }
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function withTimeout(promise, ms, label){
+  return Promise.race([
+    promise,
+    new Promise(function(_,reject){ setTimeout(function(){ reject(new Error((label||'Request')+' timed out — your internet connection may be too slow. Please try again.')); }, ms); })
+  ]);
+}
+function setStatus(elId, msg, type){
+  const el=$(elId); if(!el) return;
+  el.textContent = msg;
+  el.style.padding = msg ? '12px' : '0';
+  el.style.borderRadius = '5px';
+  el.style.fontWeight = '700';
+  el.style.fontSize = '13px';
+  if(type==='error'){ el.style.background='#fdecea'; el.style.color='var(--danger)'; el.style.borderLeft='4px solid var(--danger)'; }
+  else if(type==='success'){ el.style.background='var(--light-green)'; el.style.color='var(--deep-green)'; el.style.borderLeft='4px solid var(--green)'; }
+  else { el.style.background='transparent'; el.style.color='var(--muted)'; el.style.borderLeft='none'; }
+}
+function togglePass(inputId,btn){
+  const input=$(inputId);
+  const show=input.type==='password';
+  input.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+function normMatric(s){ return String(s||'').toUpperCase().replace(/\s+/g,''); }
+function tsMillis(t){ return (t && t.toMillis) ? t.toMillis() : Date.now(); }
+
+/* ===================== DATA ===================== */
+const PROGRAMMES = {
+  CSED:'BSc (Ed) Computer Education',
+  MTHED:'BSc (Ed) Mathematics Education'
+};
+const DEPT_NAMES = { CSED:'Computer Science Education', MTHED:'Mathematics Education' };
+
+function C(code,title,units,sem){ return {code:code,title:title,units:units,sem:sem,desc:'',outline:[],materials:[]}; }
+
+/* OFFICIAL CSED COURSE STRUCTURE */
+const DEFAULT_COURSES = {
+  CSED:{
+    100:[
+      C('CSC 101','Introduction to Computer Science',3,'1st'),
+      C('EDU 101','Introduction to Teaching and Foundations of Education',2,'1st'),
+      C('GST 111','Communication in English',2,'1st'),
+      C('MTH 101','Elementary Mathematics I',2,'1st'),
+      C('MTH 103','Elementary Mathematics III',2,'1st'),
+      C('PHY 107','General Practical Physics I',1,'1st'),
+      C('STA 111','Descriptive Statistics',3,'1st'),
+      C('COS 102','Problem Solving',3,'2nd'),
+      C('EDF 124','Philosophy of Teaching Subject',2,'2nd'),
+      C('EPS 122','Psychological Concepts and Theories I',3,'2nd'),
+      C('GST 112','Nigerian Peoples and Culture',2,'2nd'),
+      C('PHY 102','General Physics II',2,'2nd'),
+      C('STA 112','Probability I',3,'2nd')
+    ],
+    200:[
+      C('CSC 203','Discrete Structures',2,'1st'),
+      C('COS 201','Computer Programming I',3,'1st'),
+      C('EDU 201','Curriculum, Curriculum Delivery and General Teaching Methods',2,'1st'),
+      C('ENT 211','Entrepreneurship and Innovation',2,'1st'),
+      C('IFT 211','Digital Logical Design',2,'1st'),
+      C('MTH 201','Mathematical Methods I',2,'1st'),
+      C('SED 205','Secondary School Mathematics I',2,'1st'),
+      C('SEN 201','Introduction to Software Engineering',2,'1st'),
+      C('COS 202','Computer Programming II',3,'2nd'),
+      C('EDF 222','Instructional Technology',2,'2nd'),
+      C('GST 212','Philosophy, Logic and Human Existence',2,'2nd'),
+      C('IFT 212','Computer Architecture and Organisation',2,'2nd'),
+      C('MTH 202','Elementary Differential Equations',2,'2nd'),
+      C('STA 202','Statistics for Physical Science and Engineering',3,'2nd'),
+      C('STA 212','Introduction to Social and Economic Statistics',3,'2nd')
+    ],
+    300:[
+      C('COS 301','Data Structures',3,'1st'),
+      C('COS 309','Artificial Intelligence',2,'1st'),
+      C('EDU 301','Teaching Practice I',3,'1st'),
+      C('ICT 305','Data Communication System & Network',3,'1st'),
+      C('SED 301','Special Methods I',3,'1st'),
+      C('SED 313','Application of ICT in Education',2,'1st'),
+      C('SED 323','Innovation and Discoveries in Mathematics and Computer Science',2,'1st'),
+      C('COS 308','Operating Systems',3,'2nd'),
+      C('COS 322','Computer Science Innovation and New Technologies',2,'2nd'),
+      C('DST 304','Data Management',3,'2nd'),
+      C('EDU 302','Educational Measurements, Tests, Research Methods and Statistics',3,'2nd'),
+      C('ENT 312','Venture Creation',2,'2nd'),
+      C('GST 312','Peace and Conflict Resolution',2,'2nd'),
+      C('MTH 310','Mathematical Methods II',2,'2nd')
+    ],
+    400:[]
+  },
+  MTHED:{ 100:[], 200:[], 300:[], 400:[] }
+};
+let COURSES = clone(DEFAULT_COURSES);
+
+const DEFAULT_COURSE_INFO = {
+  desc:'Detailed course description will be provided by the course lecturer.',
+  outline:['Course introduction','Core topics','Assessment overview','Recommended materials']
+};
+
+const DEFAULT_OFFICERS = {
+  dean:'DR ABUBAKAR SANI',
+  facultyExam:'DR. HALIMA YUSUF',
+  hod:"DR. ABDULLAHI ADAMU DAN'INNA",
+  deptExam:'MALAMA AISHA HAMISU MUSA',
+  levelAdviser:'MALAM IBRAHIM SANI GARBA'
+};
+let officersData = Object.assign({}, DEFAULT_OFFICERS);
+
+const ABOUT_TEXT = {
+  CSED:'You stand at the intersection of education and technology. You must learn how people learn while also mastering programming, algorithms, data, and digital systems. Your role is to make computing accessible, not intimidating — teaching problem-solving, computational thinking, and responsible technology use. Keep both the learner and the machine in mind: strong pedagogy plus strong CS content creates powerful learning.',
+  MTHED:'You are training to make mathematics clear, logical and enjoyable for the next generation. Alongside core mathematics you study how learners build number sense and abstract reasoning. Your role is to turn abstract ideas into lessons that build confidence rather than fear. Strong content knowledge plus strong pedagogy is what makes a great mathematics teacher.'
+};
+
+
+const SERVICES = {
+  registration:{title:'Course Registration',body:'Log in to the university portal during the registration window, select your approved courses for the level and semester, then print your course form for departmental approval.'},
+  transcript:{title:'Transcript Request',body:'Visit the Exams and Records office with a completed transcript request form and payment evidence. Processing typically takes 2–3 weeks.'},
+  result:{title:'Result Checking',body:'Results are released on the university portal after Senate approval. Use the GPA/CGPA Checker on this portal to estimate your standing in the meantime.'},
+  advising:{title:'Academic Advising',body:'Each student is assigned an academic adviser. Contact the department office to book a session for course planning or academic concerns.'},
+  id:{title:'ID Card Services',body:'Report lost or damaged ID cards to the ICT unit with a police report (if lost) and payment evidence for replacement.'},
+  complaint:{title:'Complaints & Feedback',body:'Use the Contact page to submit a formal complaint or general feedback. Urgent matters should also be reported directly to the department office.'}
+};
+
+const EVENTS = [
+  {day:'12',mon:'OCT',title:'Second Semester Registration Deadline',desc:'All students must complete course registration by this date.'},
+  {day:'20',mon:'OCT',title:'Departmental Seminar: Computational Thinking',desc:'Open seminar for all levels, department lecture hall.'},
+  {day:'05',mon:'NOV',title:'Mid-Semester Test Begins',desc:'Continuous assessment tests across all levels.'},
+  {day:'02',mon:'DEC',title:'Semester Examinations Begin',desc:'Check individual course pages for exam venues and times.'}
+];
+
+const TESTIMONIALS = [
+  {text:'The department gave me a strong foundation in both teaching methods and computer science. I now teach confidently at secondary school level.',who:'A. Bello, Class of 2022'},
+  {text:'Balancing education courses with programming was demanding but rewarding. The lecturers were always supportive.',who:'F. Umar, Class of 2023'},
+  {text:'This program shaped how I think about technology in the classroom. I recommend it to anyone passionate about both teaching and computing.',who:'H. Sani, Class of 2021'}
+];
+
+const RESOURCES = [
+  {title:'100 Level Course Outlines (All Courses)',type:'PDF · 1.2MB'},
+  {title:'200 Level Past Questions Compilation',type:'PDF · 2.4MB'},
+  {title:'300 Level Software Engineering Notes',type:'PDF · 900KB'},
+  {title:'General Study Skills Guide',type:'PDF · 450KB'},
+  {title:'Examination Timetable Template',type:'PDF · 210KB'}
+];
+
+
+
+/* ===================== STATE ===================== */
+let gpaRowCount=0;
+let currentUser=null, currentProfile=null, currentRole='public';
+let pendingLogin=null, registering=false;
+let unsubs=[];
+let announcementsCache=[];      // published, public
+let adminAnnCache=[];           // all, admin only
+let galleryCache={};
+let myQuestions=[];
+let lvLevel=100, lvSem='all', mySem='all';
+let adminDept='CSED';
+let edDept='CSED', edLevel=100;
+let allUsers=[], stuLevel=null, stuDept='ALL';
+let editingAnnId=null;
+
+/* ===================== WELCOME / LOADER ===================== */
+function enterPortal(){ $('welcomeScreen').classList.add('hide'); }
+function runLoader(){
+  const l=$('loader');
+  l.style.width='0%';
+  requestAnimationFrame(function(){ l.style.width='70%'; });
+  setTimeout(function(){ l.style.width='100%'; },180);
+  setTimeout(function(){ l.style.width='0%'; },420);
+}
+
+/* ===================== NAVIGATION ===================== */
+const STUDENT_PAGES=['sDashboard','sBiodata','sCourses','levels','levelDetails','officers','services'];
+const ADMIN_PAGES=['aInfo','aLevels','aCourseEditor','aStudents','aAnnouncements','aGallery','aQuestions','aOfficers'];
+
+function applyNav(role){
+  currentRole=role;
+  document.querySelectorAll('#mainNav .nav-btn').forEach(function(b){
+    const groups=(b.dataset.groups||'public').split(' ');
+    b.classList.toggle('hidden', groups.indexOf(role)===-1);
+  });
+}
+
+function showPage(id){
+  if(STUDENT_PAGES.indexOf(id)!==-1 && currentRole!=='student'){ id='studentAuth'; showToast('Please log in with UNDERGRADUATE LOGIN to view that section.'); }
+  else if(ADMIN_PAGES.indexOf(id)!==-1 && currentRole!=='admin'){ id='adminAuth'; showToast('Administrators only.'); }
+  else if(id==='studentAuth' && currentRole==='student'){ id='sDashboard'; }
+  else if(id==='adminAuth' && currentRole==='admin'){ id='aInfo'; }
+  runLoader();
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  const target=$(id);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.page===id); });
+  $('mainNav').classList.remove('open');
+  updateBreadcrumb(id);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateBreadcrumb(id){
+  const crumb=$('breadcrumb');
+  const page=$(id);
+  const title=page ? (page.dataset.title || id) : id;
+  if(id==='home'){ crumb.innerHTML='<span class="current">Home</span>'; return; }
+  crumb.innerHTML='<span onclick="showPage(\'home\')">Home</span><span>›</span><span class="current">'+esc(title)+'</span>';
+}
+function toggleMenu(){ $('mainNav').classList.toggle('open'); }
+
+/* ===================== COURSE HELPERS ===================== */
+function getCourses(dept,level){ return ((COURSES[dept]||{})[level])||[]; }
+function unitsOf(list){ return list.reduce(function(t,c){ return t+(Number(c.units)||0); },0); }
+function levelNum(str){ return parseInt(String(str||'').replace(/\D/g,''),10)||0; }
+
+function courseBlocksHtml(dept, level, sem, mode){
+  const list=getCourses(dept,level);
+  if(!dept){ return '<div class="info gold">Please choose your Department in BIODATA so your courses can be shown.</div>'; }
+  if(!list.length){
+    return '<div class="info gold"><strong>'+(level===400?'COMING SOON':'NOT AVAILABLE YET')+'</strong> — '+(level===400?'400 Level courses will be added when the official course list is provided.':'The course list for '+esc(dept)+' '+level+' Level will be published soon.')+'</div>';
+  }
+  const sems = sem==='all' ? ['1st','2nd'] : [sem];
+  return sems.map(function(s){
+    const rows=list.map(function(c,i){ return {c:c,i:i}; }).filter(function(x){ return x.c.sem===s; });
+    const total=unitsOf(rows.map(function(x){ return x.c; }));
+    const label=(s==='1st'?'FIRST':'SECOND')+' SEMESTER'+(rows.length?' — '+total+' UNITS':'');
+    let table='<p style="color:var(--muted)">No courses listed for this semester.</p>';
+    if(rows.length){
+      table='<div class="table-wrap"><table class="course-table"><thead><tr><th>No.</th><th>Course Code</th><th>Course Title</th><th>Units</th><th></th></tr></thead><tbody>'+
+        rows.map(function(x,n){ return '<tr><td>'+(n+1)+'</td><td>'+esc(x.c.code)+'</td><td>'+esc(x.c.title)+'</td><td>'+esc(x.c.units)+'</td><td><button class="detail-btn" onclick="openCourse(\''+dept+'\','+level+','+x.i+')">VIEW</button></td></tr>'; }).join('')+
+        '</tbody></table></div><div class="total-units">Total: '+total+' Units</div>';
+    }
+    return '<div class="sem-block"><h3 class="sem-title">'+label+'</h3>'+table+'</div>';
+  }).join('');
+}
+
+function openCourse(dept,level,idx){
+  const c=getCourses(dept,level)[idx];
+  if(!c) return;
+  const outline=(c.outline&&c.outline.length)?c.outline:DEFAULT_COURSE_INFO.outline;
+  const mats=(c.materials||[]);
+  const matsHtml=mats.length ? '<ul class="outline">'+mats.map(function(m){
+    const parts=String(m).split('|');
+    const name=parts[0].trim(), link=(parts[1]||'').trim();
+    if(/^https?:\/\//i.test(link)) return '<li><a href="'+esc(link)+'" target="_blank" rel="noopener">'+esc(name)+'</a></li>';
+    if(/^https?:\/\//i.test(name)) return '<li><a href="'+esc(name)+'" target="_blank" rel="noopener">'+esc(name)+'</a></li>';
+    return '<li>'+esc(name)+'</li>';
+  }).join('')+'</ul>' : '<p>No course materials have been uploaded yet.</p>';
+  $('courseModalTitle').textContent=c.code;
+  $('courseModalBody').innerHTML=
+    '<h4>'+esc(c.title)+'</h4>'+
+    '<p>'+esc(dept)+' • '+level+' Level • '+esc(c.units)+' Units • '+(c.sem==='1st'?'First':'Second')+' Semester</p>'+
+    '<h4 style="font-size:15px;margin-top:14px">COURSE INFORMATION</h4><p>'+esc(c.desc||DEFAULT_COURSE_INFO.desc)+'</p>'+
+    '<h4 style="font-size:15px;margin-top:14px">COURSE OUTLINE</h4><ul class="outline">'+outline.map(function(o){ return '<li>'+esc(o)+'</li>'; }).join('')+'</ul>'+
+    '<h4 style="font-size:15px;margin-top:14px">COURSE MATERIALS</h4>'+matsHtml;
+  openModal('courseModal');
+}
+/* ===================== SEARCH ===================== */
+let searchMatches=[];
+function runSearch(q){
+  const box=$('searchResults');
+  q=q.trim().toLowerCase();
+  if(!q){ box.classList.remove('show'); box.innerHTML=''; return; }
+  const items=[];
+  document.querySelectorAll('#mainNav .nav-btn:not(.hidden)').forEach(function(b){
+    if(b.dataset.page) items.push({type:'Page',label:b.textContent.trim(),page:b.dataset.page});
+  });
+  const depts = currentRole==='admin' ? ['CSED','MTHED'] : (currentRole==='student' && currentProfile && currentProfile.department ? [currentProfile.department] : []);
+  depts.forEach(function(d){
+    [100,200,300,400].forEach(function(l){
+      getCourses(d,l).forEach(function(c,i){ items.push({type:d+' '+l+'L Course',label:c.code+' — '+c.title,course:{d:d,l:l,i:i}}); });
+    });
+  });
+  searchMatches=items.filter(function(i){ return i.label.toLowerCase().indexOf(q)!==-1; }).slice(0,8);
+  if(!searchMatches.length){ box.innerHTML='<div class="search-result-item"><small>No results</small>Try a different keyword</div>'; box.classList.add('show'); return; }
+  box.innerHTML=searchMatches.map(function(m,i){ return '<div class="search-result-item" onclick="goToSearchResult('+i+')"><small>'+esc(m.type)+'</small>'+esc(m.label)+'</div>'; }).join('');
+  box.classList.add('show');
+}
+function goToSearchResult(i){
+  const m=searchMatches[i];
+  $('searchResults').classList.remove('show');
+  $('searchInput').value='';
+  if(m.course){ openCourse(m.course.d,m.course.l,m.course.i); }
+  else { showPage(m.page); }
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.search-wrap')) $('searchResults').classList.remove('show');
+});
+
+/* ===================== STUDENT: LEVELS & COURSES ===================== */
+function studentDept(){ return currentProfile && currentProfile.department ? currentProfile.department : ''; }
+function openLevel(level){
+  lvLevel=level; lvSem='all';
+  showPage('levelDetails');
+  const d=studentDept();
+  $('levelTitle').textContent=level+' LEVEL'+(d?' — '+d:'');
+  $('levelDesc').textContent=d ? PROGRAMMES[d] : 'Choose your Department in BIODATA.';
+  document.querySelectorAll('.lv-sem-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.sem==='all'); });
+  $('lvCoursesBox').innerHTML=courseBlocksHtml(d,level,'all');
+}
+function setLvSem(btn,sem){
+  document.querySelectorAll('.lv-sem-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); lvSem=sem;
+  $('lvCoursesBox').innerHTML=courseBlocksHtml(studentDept(),lvLevel,sem);
+}
+function setMySem(btn,sem){
+  document.querySelectorAll('.my-sem-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); mySem=sem;
+  renderMyCourses();
+}
+function renderMyCourses(){
+  if(!currentProfile) return;
+  const d=studentDept(), l=levelNum(currentProfile.level);
+  $('sCoursesSub').textContent = d ? (PROGRAMMES[d]+' • '+l+' Level') : 'Courses for your programme and level.';
+  $('myCoursesBox').innerHTML=courseBlocksHtml(d,l,mySem);
+}
+function refreshCourseViews(){
+  if(currentRole==='student'){
+    renderMyCourses(); renderStudentDashboard();
+    if($('levelDetails').classList.contains('active')) $('lvCoursesBox').innerHTML=courseBlocksHtml(studentDept(),lvLevel,lvSem);
+  }
+}
+
+
+/* ===================== SERVICES ===================== */
+function openServiceModal(key){
+  const s=SERVICES[key];
+  document.getElementById('serviceModalTitle').textContent=s.title;
+  document.getElementById('serviceModalBody').innerHTML=`<p>${s.body}</p>`;
+  openModal('serviceModal');
+}
+
+/* ===================== EVENTS ===================== */
+function renderEvents(){
+  document.getElementById('eventsList').innerHTML=EVENTS.map(e=>`
+    <div class="event-item">
+      <div class="event-date"><small>${e.mon}</small><strong>${e.day}</strong></div>
+      <div><h3 style="color:var(--dark-blue);font-weight:900;text-transform:uppercase">${e.title}</h3><p style="color:var(--muted)">${e.desc}</p></div>
+    </div>`).join('');
+}
+
+/* ===================== TESTIMONIALS ===================== */
+function renderTestimonials(){
+  document.getElementById('testimonialGrid').innerHTML=TESTIMONIALS.map(t=>`
+    <div class="card testimonial"><p>"${t.text}"</p><div class="who">${t.who}</div></div>`).join('');
+}
+
+/* ===================== RESOURCES ===================== */
+function renderResources(){
+  document.getElementById('resourceList').innerHTML=RESOURCES.map(r=>`
+    <div class="resource-item">
+      <div class="resource-info"><strong>${r.title}</strong><span>${r.type}</span></div>
+      <button class="btn btn-outline" onclick="showToast('Demo file — connect a backend to enable real downloads.')">DOWNLOAD</button>
+    </div>`).join('');
+}
+
+/* ===================== GPA CHECKER ===================== */
+function addGpaRow(){
+  gpaRowCount++;
+  const id='gpa'+gpaRowCount;
+  const row=document.createElement('div');
+  row.className='gpa-row';
+  row.id=id;
+  row.innerHTML=`
+    <input class="control" placeholder="Course title" id="${id}-title">
+    <input class="control" type="number" min="1" max="6" placeholder="Units" id="${id}-units">
+    <select class="control" id="${id}-grade"><option value="5">A</option><option value="4">B</option><option value="3">C</option><option value="2">D</option><option value="1">E</option><option value="0">F</option></select>
+    <button class="btn btn-outline" onclick="document.getElementById('${id}').remove()">✕</button>`;
+  document.getElementById('gpaRows').appendChild(row);
+}
+function calculateGpa(){
+  const rows=document.querySelectorAll('.gpa-row');
+  let totalUnits=0, totalPoints=0;
+  rows.forEach(r=>{
+    const u=parseFloat(r.querySelector('[id$="-units"]').value)||0;
+    const g=parseFloat(r.querySelector('[id$="-grade"]').value)||0;
+    totalUnits+=u; totalPoints+=u*g;
+  });
+  const gpa=totalUnits? (totalPoints/totalUnits).toFixed(2) : '0.00';
+  document.getElementById('gpaValue').textContent=gpa;
+  document.getElementById('gpaResult').classList.remove('hidden');
+  // Conveniently carry this semester's GPA/units into the CGPA calculator
+  document.getElementById('cgpaCurrentGpa').value = gpa;
+  document.getElementById('cgpaCurrentUnits').value = totalUnits;
+}
+
+function calculateCgpa(){
+  const prevCgpa=parseFloat(document.getElementById('cgpaPrev').value)||0;
+  const prevUnits=parseFloat(document.getElementById('cgpaPrevUnits').value)||0;
+  const curGpa=parseFloat(document.getElementById('cgpaCurrentGpa').value)||0;
+  const curUnits=parseFloat(document.getElementById('cgpaCurrentUnits').value)||0;
+  const totalUnits=prevUnits+curUnits;
+  if(totalUnits<=0){ showToast('Enter at least one set of units.'); return; }
+  const cgpa=((prevCgpa*prevUnits)+(curGpa*curUnits))/totalUnits;
+  document.getElementById('cgpaValue').textContent=cgpa.toFixed(2);
+  document.getElementById('cgpaResult').classList.remove('hidden');
+}
+
+
+/* ===================== FIREBASE ===================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCFwJVuBdW9lnhvNj3r72BpM_yQ--a0_go",
+  authDomain: "umyu-mcsed.firebaseapp.com",
+  projectId: "umyu-mcsed",
+  storageBucket: "umyu-mcsed.firebasestorage.app",
+  messagingSenderId: "1019726147438",
+  appId: "1:1019726147438:web:14671810b9645dd54f1b7f"
+};
+const isConfigured = (typeof firebase !== "undefined") && firebaseConfig.apiKey !== "YOUR_API_KEY";
+let auth, db;
+if(isConfigured){
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+}
+function requireConfig(){
+  if(!isConfigured){ showToast('The database is not connected on this page.'); return false; }
+  return true;
+}
+function friendlyError(err){
+  const m=err.code||'';
+  if(m.indexOf('email-already-in-use')!==-1) return 'That email is already registered. Try logging in instead.';
+  if(m.indexOf('invalid-credential')!==-1||m.indexOf('wrong-password')!==-1||m.indexOf('user-not-found')!==-1||m.indexOf('invalid-login')!==-1) return 'Incorrect email or password.';
+  if(m.indexOf('weak-password')!==-1) return 'Password is too short (minimum 6 characters).';
+  if(m.indexOf('invalid-email')!==-1) return 'That email address is not valid.';
+  if(m.indexOf('permission-denied')!==-1) return 'The database refused this action. Make sure the latest Firestore Rules were published.';
+  if(m.indexOf('network')!==-1) return 'Network problem. Check your internet connection and try again.';
+  return 'Something went wrong: '+(err.message||m);
+}
+
+/* ===================== IMAGES ===================== */
+function resizeImage(file, opts){
+  return new Promise(function(resolve,reject){
+    const reader=new FileReader();
+    reader.onerror=function(){ reject(new Error('Could not read the image.')); };
+    reader.onload=function(e){
+      const img=new Image();
+      img.onerror=function(){ reject(new Error('That file is not a valid image.')); };
+      img.onload=function(){
+        const canvas=document.createElement('canvas');
+        const ctx=canvas.getContext('2d');
+        if(opts.square){
+          const size=opts.size;
+          canvas.width=size; canvas.height=size;
+          const scale=Math.max(size/img.width,size/img.height);
+          const w=img.width*scale, h=img.height*scale;
+          ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
+        } else {
+          const scale=Math.min(1, opts.size/Math.max(img.width,img.height));
+          canvas.width=Math.round(img.width*scale); canvas.height=Math.round(img.height*scale);
+          ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        }
+        resolve(canvas.toDataURL('image/jpeg',opts.quality));
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function avatarHtml(p){
+  if(p && p.photoBase64) return '<img src="'+esc(p.photoBase64)+'" style="width:100%;height:100%;object-fit:cover" alt="Profile photo">';
+  return esc(((p&&p.name)||'?').charAt(0).toUpperCase());
+}
+async function uploadMyPhoto(input,avatarId){
+  const file=input.files[0];
+  input.value='';
+  if(!file||!currentUser) return;
+  const statusId = avatarId==='aAvatar' ? 'aPhotoStatus' : 'bPhotoStatus';
+  setStatus(statusId,'Processing photo…','');
+  try{
+    const dataUrl=await resizeImage(file,{size:200,square:true,quality:0.7});
+    await withTimeout(db.collection('users').doc(currentUser.uid).set({photoBase64:dataUrl},{merge:true}),15000,'Uploading photo');
+    currentProfile.photoBase64=dataUrl;
+    $(avatarId).innerHTML=avatarHtml(currentProfile);
+    if($('dAvatar')) $('dAvatar').innerHTML=avatarHtml(currentProfile);
+    setStatus(statusId,'Photo updated.','success');
+  }catch(err){ setStatus(statusId,'Could not save photo: '+err.message,'error'); }
+}
+
+/* ===================== PUBLIC LIVE DATA ===================== */
+function stopPrivateListeners(){ unsubs.forEach(function(u){ try{u();}catch(e){} }); unsubs=[]; }
+function listen(query, onData){
+  const u=query.onSnapshot(onData,function(err){ console.warn('Listener error:',err.code||err.message); });
+  return u;
+}
+
+function annCardHtml(a){
+  return '<div class="card announcement"><small>'+esc((a.category||'GENERAL').toUpperCase())+'</small><h3>'+esc(a.title)+'</h3><p>'+esc(a.body)+'</p></div>';
+}
+function renderAnnouncements(){
+  const list=announcementsCache;
+  $('publicAnnList').innerHTML = list.length ? list.map(annCardHtml).join('') : '<p style="color:var(--muted)">No announcements have been published yet.</p>';
+  $('homeAnnList').innerHTML = list.length ? list.slice(0,2).map(annCardHtml).join('') : '<div class="card announcement"><small>PORTAL</small><h3>WELCOME</h3><p>Announcements from the department will appear here.</p></div>';
+  if($('dAnnList')) $('dAnnList').innerHTML = list.length ? list.slice(0,3).map(annCardHtml).join('') : '<p style="color:var(--muted)">No announcements yet.</p>';
+  $('notifBadge').textContent = list.length ? String(Math.min(list.length,9)) : '0';
+}
+
+function renderGalleryPublic(){
+  let html='';
+  for(let n=1;n<=6;n++){
+    const g=galleryCache[String(n)]||{};
+    const title=g.title||('Education Gallery '+n);
+    html+='<div class="gallery-item">'+
+      (g.imageBase64 ? '<img src="'+esc(g.imageBase64)+'" alt="'+esc(title)+'">' : '<div class="placeholder ph">'+n+'</div>')+
+      '<div class="gallery-cap">'+esc(title)+'</div>'+
+      (g.description?'<div class="gallery-desc">'+esc(g.description)+'</div>':'')+
+    '</div>';
+  }
+  $('galleryGrid').innerHTML=html;
+}
+
+function applyCourseOverrides(data){
+  COURSES=clone(DEFAULT_COURSES);
+  Object.keys(data||{}).forEach(function(k){
+    const p=k.split('_'); const d=p[0], l=parseInt(p[1],10);
+    if(COURSES[d] && Array.isArray(data[k])) COURSES[d][l]=data[k];
+  });
+  refreshCourseViews();
+}
+function renderOfficers(){
+  const o=officersData;
+  const rows=[['FACULTY DEAN',o.dean],['FACULTY EXAM OFFICER',o.facultyExam],['H.O.D',o.hod],['DEPARTMENT EXAM OFFICER',o.deptExam],['LEVEL ADVISER',o.levelAdviser]];
+  $('officersGrid').innerHTML=rows.map(function(r){ return '<div class="card officer"><div class="position">'+r[0]+'</div><h3>'+esc(r[1])+'</h3></div>'; }).join('');
+}
+
+function startPublicListeners(){
+  if(!isConfigured) return;
+  listen(db.collection('announcements').where('published','==',true), function(snap){
+    announcementsCache=[];
+    snap.forEach(function(d){ announcementsCache.push(Object.assign({id:d.id},d.data())); });
+    announcementsCache.sort(function(a,b){ return tsMillis(b.createdAt)-tsMillis(a.createdAt); });
+    renderAnnouncements();
+  });
+  listen(db.collection('gallery'), function(snap){
+    galleryCache={};
+    snap.forEach(function(d){ galleryCache[d.id]=d.data(); });
+    renderGalleryPublic();
+    if(currentRole==='admin') renderAdminGallery();
+  });
+  listen(db.collection('siteContent'), function(snap){
+    snap.forEach(function(d){
+      if(d.id==='courses') applyCourseOverrides(d.data());
+      if(d.id==='officers'){ officersData=Object.assign({},DEFAULT_OFFICERS,d.data()); renderOfficers(); }
+    });
+  });
+}
+
+/* ===================== AUTH: UI ===================== */
+function setAuthTab(which){
+  const isLogin = which==='login';
+  $('tabSLogin').classList.toggle('active',isLogin);
+  $('tabSRegister').classList.toggle('active',!isLogin);
+  $('sLoginForm').classList.toggle('hidden',!isLogin);
+  $('sRegisterForm').classList.toggle('hidden',isLogin);
+}
+function syncProgramme(){ $('srProgramme').value = PROGRAMMES[$('srDept').value]||''; }
+function syncBioProgramme(){ $('bProgramme').value = PROGRAMMES[$('bDept').value]||''; }
+
+function showPublicControls(){
+  $('authControls').innerHTML='<button class="icon-btn hide-mobile" onclick="showPage(\'studentAuth\')">UNDERGRADUATE LOGIN</button> <button class="icon-btn hide-mobile" onclick="showPage(\'adminAuth\')">ADMIN LOGIN</button>';
+}
+function showUserControls(){
+  const label = currentRole==='admin' ? 'ADMIN' : 'STUDENT';
+  $('authControls').innerHTML='<span class="chip">'+esc(currentProfile.name||label)+'</span> <button class="icon-btn" onclick="doLogout()">LOG OUT</button>';
+}
+/* ===================== AUTH: REGISTER / LOGIN ===================== */
+async function doStudentRegister(){
+  setStatus('sRegisterStatus','','');
+  if(!requireConfig()) return;
+  const name=val('srName');
+  const matric=normMatric($('srMatric').value);
+  const email=val('srEmail');
+  const dept=$('srDept').value;
+  const level=$('srLevel').value;
+  const pass=$('srPass').value, pass2=$('srPass2').value;
+  if(!name||!matric||!email||!dept||!level||!pass||!pass2){ setStatus('sRegisterStatus','Please fill in every field.','error'); return; }
+  if(!/^[A-Z0-9][A-Z0-9\/\-.]{4,}$/.test(matric)){ setStatus('sRegisterStatus','Please enter a valid Matric Number (letters, numbers and / only).','error'); return; }
+  const other = dept==='CSED' ? 'MTHED' : 'CSED';
+  if(matric.indexOf(other)!==-1){ setStatus('sRegisterStatus','This Matric Number belongs to '+other+' but you selected '+dept+'. Please check your department.','error'); return; }
+  if(pass.length<6){ setStatus('sRegisterStatus','Password must be at least 6 characters.','error'); return; }
+  if(pass!==pass2){ setStatus('sRegisterStatus','Passwords do not match.','error'); return; }
+  setStatus('sRegisterStatus','Creating your account…','');
+  registering=true;
+  let cred;
+  try{
+    cred=await withTimeout(auth.createUserWithEmailAndPassword(email,pass),15000,'Account creation');
+  }catch(err){ registering=false; setStatus('sRegisterStatus',friendlyError(err),'error'); return; }
+  try{
+    await withTimeout(db.collection('users').doc(cred.user.uid).set({
+      name:name, matric:matric, email:email, department:dept, programme:PROGRAMMES[dept], level:level,
+      role:'student', createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    }),15000,'Saving your profile');
+  }catch(err){
+    registering=false;
+    try{ await cred.user.delete(); }catch(e){}
+    setStatus('sRegisterStatus','Your profile could not be saved, so the account was not created. '+friendlyError(err),'error');
+    return;
+  }
+  registering=false;
+  setStatus('sRegisterStatus','Account created. Welcome, '+name+'!','success');
+  await processUser(cred.user);
+}
+
+async function doStudentLogin(){
+  setStatus('sLoginStatus','','');
+  if(!requireConfig()) return;
+  const matric=normMatric($('slMatric').value);
+  const email=val('slEmail');
+  const pass=$('slPass').value;
+  if(!matric||!email||!pass){ setStatus('sLoginStatus','Enter your Matric Number, School Email and Password.','error'); return; }
+  setStatus('sLoginStatus','Logging in…','');
+  pendingLogin={type:'student',matric:matric};
+  try{ await withTimeout(auth.signInWithEmailAndPassword(email,pass),15000,'Login'); }
+  catch(err){ pendingLogin=null; setStatus('sLoginStatus',friendlyError(err),'error'); }
+}
+async function doAdminLogin(){
+  setStatus('aLoginStatus','','');
+  if(!requireConfig()) return;
+  const email=val('alEmail'), pass=$('alPass').value;
+  if(!email||!pass){ setStatus('aLoginStatus','Enter the admin email and password.','error'); return; }
+  setStatus('aLoginStatus','Logging in…','');
+  pendingLogin={type:'admin'};
+  try{ await withTimeout(auth.signInWithEmailAndPassword(email,pass),15000,'Login'); }
+  catch(err){ pendingLogin=null; setStatus('aLoginStatus',friendlyError(err),'error'); }
+}
+async function doLogout(){
+  stopPrivateListeners();
+  if(auth) await auth.signOut();
+  showToast('Logged out.');
+}
+
+async function failLogin(kind,msg){
+  const id = kind==='admin' ? 'aLoginStatus' : 'sLoginStatus';
+  pendingLogin=null;
+  await auth.signOut();
+  setStatus(id,msg,'error');
+}
+
+/* ===================== AUTH: SESSION ===================== */
+async function processUser(user){
+  currentUser=user;
+  if(!user){
+    stopPrivateListeners();
+    currentProfile=null;
+    applyNav('public');
+    showPublicControls();
+    renderAnnouncements();
+    $('pendingCount').textContent='—'; $('answeredCount').textContent='—';
+    showPage('home');
+    return;
+  }
+  let snap;
+  try{ snap=await withTimeout(db.collection('users').doc(user.uid).get(),12000,'Loading your profile'); }
+  catch(err){
+    const kind=pendingLogin?pendingLogin.type:'student';
+    await failLogin(kind,'Could not load your profile. '+friendlyError(err));
+    return;
+  }
+  if(!snap.exists){
+    // Older account without a saved profile: create a basic student record so it can be completed in Biodata.
+    const basic={name:(user.email||'Student').split('@')[0],email:user.email,role:'student',department:'',programme:'',level:'100L',matric:'',createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+    try{ await db.collection('users').doc(user.uid).set(basic); snap=await db.collection('users').doc(user.uid).get(); }catch(e){}
+  }
+  const profile = snap.exists ? snap.data() : {name:'Student',role:'student'};
+  const isAdmin = profile.role==='admin' || profile.role==='teacher';
+
+  if(pendingLogin){
+    if(pendingLogin.type==='admin' && !isAdmin){ await failLogin('admin','This account is not an administrator account.'); return; }
+    if(pendingLogin.type==='student'){
+      if(isAdmin){ await failLogin('student','This is an administrator account. Please use ADMIN LOGIN.'); return; }
+      if(normMatric(profile.matric)!==pendingLogin.matric){ await failLogin('student','The Matric Number does not match this account.'); return; }
+    }
+    pendingLogin=null;
+  }
+
+  currentProfile=Object.assign({uid:user.uid},profile);
+  stopPrivateListeners();
+  if(isAdmin){
+    applyNav('admin'); showUserControls(); startAdminListeners(); fillAdminInfo(); renderOfficersEditor(); renderAdminGallery();
+    showPage('aInfo');
+  } else {
+    applyNav('student'); showUserControls(); startStudentListeners(); renderStudentDashboard(); renderBiodata(); renderMyCourses(); renderOfficers();
+    showPage('sDashboard');
+  }
+  renderAnnouncements();
+}
+
+if(isConfigured){
+  auth.onAuthStateChanged(function(user){ if(registering) return; processUser(user); });
+  startPublicListeners();
+}
+/* ===================== STUDENT PORTAL ===================== */
+function renderStudentDashboard(){
+  if(!currentProfile) return;
+  const p=currentProfile, d=p.department||'', l=levelNum(p.level);
+  $('dAvatar').innerHTML=avatarHtml(p);
+  $('dName').textContent=p.name||'—';
+  $('dMeta').textContent=(p.matric||'—')+' • '+(p.programme||PROGRAMMES[d]||'Programme not set');
+  $('dLevel').textContent=p.level||'—';
+  const list=getCourses(d,l);
+  $('dCourseCount').textContent=list.length;
+  $('dUnits').textContent=unitsOf(list);
+  $('dAboutTitle').textContent = d==='MTHED' ? 'MATHEMATICS EDUCATION STUDENTS' : (d==='CSED' ? 'COMPUTER SCIENCE EDUCATION STUDENTS' : 'EDUCATION STUDENTS');
+  $('dAboutText').textContent = ABOUT_TEXT[d] || 'Education students are future teachers, mentors and leaders. Complete your Department in BIODATA to see information about your programme.';
+  renderMyQuestions();
+}
+function renderBiodata(){
+  const p=currentProfile; if(!p) return;
+  $('bAvatar').innerHTML=avatarHtml(p);
+  $('bName').value=p.name||''; $('bMatric').value=p.matric||''; $('bEmail').value=p.email||'';
+  $('bPhone').value=p.phone||''; $('bDept').value=p.department||'';
+  $('bDept').disabled = !!p.department;      // department is fixed once set
+  $('bProgramme').value=p.programme||PROGRAMMES[p.department]||'';
+  $('bLevel').value=p.level||'100L'; $('bGender').value=p.gender||'';
+  $('bState').value=p.state||''; $('bLga').value=p.lga||''; $('bAddress').value=p.address||'';
+  $('bGuardianName').value=p.guardianName||''; $('bGuardianPhone').value=p.guardianPhone||'';
+}
+async function saveBiodata(){
+  if(!currentUser) return;
+  const dept = currentProfile.department || $('bDept').value;
+  const data={
+    name:val('bName'), phone:val('bPhone'), department:dept, programme:PROGRAMMES[dept]||'',
+    level:$('bLevel').value, gender:$('bGender').value, state:val('bState'), lga:val('bLga'),
+    address:val('bAddress'), guardianName:val('bGuardianName'), guardianPhone:val('bGuardianPhone')
+  };
+  if(!data.name){ setStatus('bStatus','Full Name cannot be empty.','error'); return; }
+  setStatus('bStatus','Saving…','');
+  try{
+    await withTimeout(db.collection('users').doc(currentUser.uid).set(data,{merge:true}),15000,'Saving biodata');
+    Object.assign(currentProfile,data);
+    showUserControls(); renderBiodata(); renderStudentDashboard(); renderMyCourses();
+    setStatus('bStatus','Biodata saved.','success');
+  }catch(err){ setStatus('bStatus',friendlyError(err),'error'); }
+}
+
+function startStudentListeners(){
+  if(!isConfigured||!currentUser) return;
+  unsubs.push(listen(db.collection('questions').where('uid','==',currentUser.uid), function(snap){
+    myQuestions=[];
+    snap.forEach(function(d){ myQuestions.push(Object.assign({id:d.id},d.data())); });
+    myQuestions.sort(function(a,b){ return tsMillis(b.createdAt)-tsMillis(a.createdAt); });
+    renderMyQuestions();
+  }));
+}
+function renderMyQuestions(){
+  const pending=myQuestions.filter(function(q){ return q.status!=='answered'; }).length;
+  $('pendingCount').textContent = currentRole==='student' ? pending : '—';
+  $('answeredCount').textContent = currentRole==='student' ? (myQuestions.length-pending) : '—';
+  const box=$('dQuestions'); if(!box) return;
+  if(!myQuestions.length){ box.innerHTML='<p style="color:var(--muted)">You have not asked any question yet.</p>'; return; }
+  box.innerHTML=myQuestions.map(function(q){
+    return '<div class="q-item '+(q.status==='answered'?'answered':'')+'"><small>'+(q.course?esc(q.course)+' • ':'')+(q.status==='answered'?'ANSWERED':'PENDING')+'</small><p style="color:var(--text);margin-top:4px">'+esc(q.text)+'</p>'+
+      (q.status==='answered'?'<div class="q-answer"><strong>Answer:</strong> '+esc(q.answer)+'</div>':'')+'</div>';
+  }).join('');
+}
+
+function openQuestion(){
+  if(currentRole!=='student'){ showToast('Please log in with UNDERGRADUATE LOGIN to ask a question.'); showPage('studentAuth'); return; }
+  setStatus('qStatus','','');
+  openModal('questionModal');
+}
+async function submitQuestion(e){
+  e.preventDefault();
+  if(!currentUser||currentRole!=='student') return;
+  const text=val('qText'), course=val('qCourse');
+  if(!text) return;
+  setStatus('qStatus','Sending…','');
+  try{
+    await withTimeout(db.collection('questions').add({
+      uid:currentUser.uid, name:currentProfile.name||'', matric:currentProfile.matric||'', course:course, text:text,
+      status:'pending', answer:'', createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    }),15000,'Sending question');
+    $('qText').value=''; $('qCourse').value='';
+    closeModal('questionModal');
+    showToast('Question sent. You will see the answer on your dashboard.');
+  }catch(err){ setStatus('qStatus',friendlyError(err),'error'); }
+}
+
+function openProfile(){
+  if(currentRole==='student') showPage('sBiodata');
+  else if(currentRole==='admin') showPage('aInfo');
+  else showPage('studentAuth');
+}
+function showNotifications(){
+  const list=announcementsCache.slice(0,4);
+  $('notifBody').innerHTML = list.length ? list.map(function(a,i){ return '<div class="info'+(i%2?' gold':'')+'"><strong>'+esc(a.title)+'</strong></div>'; }).join('') : '<p style="color:var(--muted)">No new announcements.</p>';
+  $('notifBadge').textContent='0';
+  openModal('notifModal');
+}
+
+
+/* ===================== ADMIN PORTAL ===================== */
+function startAdminListeners(){
+  if(!isConfigured||!currentUser) return;
+  unsubs.push(listen(db.collection('announcements').orderBy('createdAt','desc'), function(snap){
+    adminAnnCache=[];
+    snap.forEach(function(d){ adminAnnCache.push(Object.assign({id:d.id},d.data())); });
+    renderAdminAnnouncements();
+  }));
+  unsubs.push(listen(db.collection('questions').orderBy('createdAt','desc'), function(snap){
+    const items=[];
+    snap.forEach(function(d){ items.push(Object.assign({id:d.id},d.data())); });
+    renderAdminQuestions(items);
+  }));
+  loadAllUsers();
+}
+
+function fillAdminInfo(){
+  const p=currentProfile;
+  $('aAvatar').innerHTML=avatarHtml(p);
+  $('aiName').value=p.name||''; $('aiEmail').value=p.email||(currentUser&&currentUser.email)||''; $('aiPhone').value=p.phone||'';
+}
+async function saveAdminInfo(){
+  const data={name:val('aiName'),phone:val('aiPhone')};
+  if(!data.name){ setStatus('aiStatus','Name cannot be empty.','error'); return; }
+  setStatus('aiStatus','Saving…','');
+  try{
+    await withTimeout(db.collection('users').doc(currentUser.uid).set(data,{merge:true}),15000,'Saving');
+    Object.assign(currentProfile,data); showUserControls();
+    setStatus('aiStatus','Admin information saved.','success');
+  }catch(err){ setStatus('aiStatus',friendlyError(err),'error'); }
+}
+
+/* ---- Admin: courses ---- */
+function setAdminDept(btn,dept){
+  document.querySelectorAll('.ad-dept-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); adminDept=dept;
+}
+function editorCardHtml(c){
+  c=c||{code:'',title:'',units:2,sem:'1st',desc:'',outline:[],materials:[]};
+  return '<div class="ed-card">'+
+    '<div class="ed-grid">'+
+      '<div><label>Course Code</label><input class="control ed-code" value="'+esc(c.code)+'"></div>'+
+      '<div><label>Course Title</label><input class="control ed-title" value="'+esc(c.title)+'"></div>'+
+      '<div><label>Units</label><input class="control ed-units" type="number" min="0" max="12" value="'+esc(c.units)+'"></div>'+
+      '<div><label>Semester</label><select class="control ed-sem"><option value="1st"'+(c.sem==='1st'?' selected':'')+'>First</option><option value="2nd"'+(c.sem==='2nd'?' selected':'')+'>Second</option></select></div>'+
+    '</div>'+
+    '<label>Course Description</label><textarea class="control ed-desc">'+esc(c.desc||'')+'</textarea>'+
+    '<label>Course Outline (one topic per line)</label><textarea class="control ed-outline">'+esc((c.outline||[]).join('\n'))+'</textarea>'+
+    '<label>Course Materials (one per line — "Name | https://link")</label><textarea class="control ed-materials">'+esc((c.materials||[]).join('\n'))+'</textarea>'+
+    '<div class="row-actions"><button class="btn btn-danger btn-sm" onclick="this.closest(\'.ed-card\').remove()">REMOVE COURSE</button></div>'+
+  '</div>';
+}
+function openCourseEditor(level){
+  edDept=adminDept; edLevel=level;
+  $('edTitle').textContent=edDept+' — '+level+' LEVEL COURSES';
+  const list=getCourses(edDept,level);
+  $('edList').innerHTML = list.length ? list.map(editorCardHtml).join('') : '<div class="info gold">No courses yet for this level. Press "+ ADD COURSE" to add the first one.</div>';
+  setStatus('edStatus','','');
+  showPage('aCourseEditor');
+}
+function addEditorCourse(){
+  const box=$('edList');
+  if(!box.querySelector('.ed-card')) box.innerHTML='';
+  box.insertAdjacentHTML('beforeend',editorCardHtml());
+  box.lastElementChild.scrollIntoView({behavior:'smooth'});
+}
+function lines(text){ return String(text||'').split('\n').map(function(s){ return s.trim(); }).filter(Boolean); }
+async function saveCourseEditor(){
+  const cards=document.querySelectorAll('#edList .ed-card');
+  const arr=[];
+  cards.forEach(function(card){
+    const code=card.querySelector('.ed-code').value.trim();
+    if(!code) return;
+    arr.push({
+      code:code, title:card.querySelector('.ed-title').value.trim(),
+      units:parseInt(card.querySelector('.ed-units').value,10)||0, sem:card.querySelector('.ed-sem').value,
+      desc:card.querySelector('.ed-desc').value.trim(),
+      outline:lines(card.querySelector('.ed-outline').value), materials:lines(card.querySelector('.ed-materials').value)
+    });
+  });
+  setStatus('edStatus','Saving…','');
+  try{
+    const data={}; data[edDept+'_'+edLevel]=arr;
+    await withTimeout(db.collection('siteContent').doc('courses').set(data,{merge:true}),15000,'Saving courses');
+    setStatus('edStatus','Saved. Students will now see these '+edDept+' '+edLevel+' Level courses.','success');
+  }catch(err){ setStatus('edStatus',friendlyError(err),'error'); }
+}
+async function resetCourseEditor(){
+  if(!confirm('Remove all your changes for '+edDept+' '+edLevel+' Level and go back to the built-in list?')) return;
+  try{
+    const data={}; data[edDept+'_'+edLevel]=firebase.firestore.FieldValue.delete();
+    await withTimeout(db.collection('siteContent').doc('courses').set(data,{merge:true}),15000,'Resetting');
+    setTimeout(function(){ openCourseEditor(edLevel); setStatus('edStatus','Reset to the default list.','success'); },600);
+  }catch(err){ setStatus('edStatus',friendlyError(err),'error'); }
+}
+
+/* ---- Admin: registered students ---- */
+async function loadAllUsers(){
+  try{
+    const snap=await withTimeout(db.collection('users').get(),15000,'Loading students');
+    allUsers=[];
+    snap.forEach(function(d){ const u=d.data(); if(u.role==='student') allUsers.push(Object.assign({id:d.id},u)); });
+    renderStudentTable();
+  }catch(err){ $('stuTableBox').innerHTML='<p style="color:var(--danger)">Could not load students: '+esc(friendlyError(err))+'</p>'; }
+}
+function pickStudentLevel(btn,level){
+  document.querySelectorAll('.stu-level-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); stuLevel=level; renderStudentTable();
+}
+function pickStudentDept(btn,dept){
+  document.querySelectorAll('.stu-dept-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); stuDept=dept; renderStudentTable();
+}
+let stuShown=[];
+function renderStudentTable(){
+  const box=$('stuTableBox');
+  if(!stuLevel){ box.innerHTML='<p style="color:var(--muted)">Select a level above.</p>'; return; }
+  const q=($('stuSearch').value||'').trim().toLowerCase();
+  stuShown=allUsers.filter(function(u){
+    return u.level===stuLevel && (stuDept==='ALL'||u.department===stuDept) &&
+      (!q || (u.name||'').toLowerCase().indexOf(q)!==-1 || (u.matric||'').toLowerCase().indexOf(q)!==-1);
+  }).sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); });
+  if(!stuShown.length){ box.innerHTML='<p style="color:var(--muted)">No registered students found for '+esc(stuLevel)+'.</p>'; return; }
+  box.innerHTML='<div class="table-wrap"><table class="stu-table"><thead><tr><th>No.</th><th>Student Name</th><th>Matric Number</th></tr></thead><tbody>'+
+    stuShown.map(function(u,i){ return '<tr class="clickable" onclick="openStudentDetail('+i+')"><td>'+(i+1)+'</td><td>'+esc(u.name)+'</td><td>'+esc(u.matric)+'</td></tr>'; }).join('')+
+    '</tbody></table></div><p style="color:var(--muted);font-size:12px;margin-top:8px">Total: '+stuShown.length+' student(s). Tap a row to open the full profile.</p>';
+}
+function openStudentDetail(i){
+  const s=stuShown[i]; if(!s) return;
+  function row(l,v){ return '<p><strong>'+l+':</strong> '+esc(v||'—')+'</p>'; }
+  $('studentDetailBody').innerHTML=
+    '<div style="display:flex;gap:14px;align-items:center;margin-bottom:15px"><div class="avatar" style="overflow:hidden">'+avatarHtml(s)+'</div><div><h4>'+esc(s.name)+'</h4><p>'+esc(s.email)+'</p></div></div>'+
+    row('Matric Number',s.matric)+row('Department',s.department)+row('Programme',s.programme)+row('Level',s.level)+row('Phone',s.phone)+row('Gender',s.gender)+
+    row('State of Origin',s.state)+row('LGA',s.lga)+row('Home Address',s.address)+row('Guardian',(s.guardianName||'—')+' ('+(s.guardianPhone||'—')+')')+
+    '<div class="row-actions"><button class="btn btn-blue btn-sm" onclick="makeAdmin(\''+esc(s.id)+'\')">MAKE THIS PERSON AN ADMIN</button></div>';
+  openModal('studentDetailModal');
+}
+async function makeAdmin(uid){
+  if(!confirm('This person will be able to manage the whole portal and see all student records. Continue?')) return;
+  try{
+    await withTimeout(db.collection('users').doc(uid).update({role:'admin'}),15000,'Updating');
+    closeModal('studentDetailModal'); showToast('Done. That person is now an admin.'); loadAllUsers();
+  }catch(err){ showToast(friendlyError(err)); }
+}
+
+/* ---- Admin: announcements ---- */
+function resetAnnouncementForm(){
+  editingAnnId=null;
+  $('annFormTitle').textContent='NEW ANNOUNCEMENT';
+  $('annTitle').value=''; $('annCat').value=''; $('annBody').value='';
+  setStatus('annStatus','','');
+}
+async function saveAnnouncement(publish){
+  const title=val('annTitle'), body=val('annBody'), cat=val('annCat')||'General';
+  if(!title||!body){ setStatus('annStatus','Enter a title and a message.','error'); return; }
+  setStatus('annStatus','Saving…','');
+  try{
+    const data={title:title,category:cat,body:body,published:publish,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+    if(editingAnnId){ await withTimeout(db.collection('announcements').doc(editingAnnId).update(data),15000,'Saving'); }
+    else { data.createdAt=firebase.firestore.FieldValue.serverTimestamp(); await withTimeout(db.collection('announcements').add(data),15000,'Saving'); }
+    const done = publish ? 'Announcement published.' : 'Saved as a draft (not visible to students).';
+    resetAnnouncementForm(); setStatus('annStatus',done,'success');
+  }catch(err){ setStatus('annStatus',friendlyError(err),'error'); }
+}
+function renderAdminAnnouncements(){
+  const box=$('adminAnnList');
+  if(!adminAnnCache.length){ box.innerHTML='<p style="color:var(--muted)">No announcements yet.</p>'; return; }
+  box.innerHTML=adminAnnCache.map(function(a){
+    const pub=a.published===true;
+    return '<div class="card announcement" style="margin-bottom:12px"><div class="ann-badges"><span class="pill '+(pub?'pill-pub':'pill-draft')+'">'+(pub?'Published':'Draft')+'</span><small>'+esc((a.category||'GENERAL').toUpperCase())+'</small></div>'+
+      '<h3>'+esc(a.title)+'</h3><p>'+esc(a.body)+'</p><div class="row-actions">'+
+      '<button class="btn btn-outline btn-sm" onclick="editAnnouncement(\''+esc(a.id)+'\')">EDIT</button>'+
+      '<button class="btn btn-'+(pub?'outline':'green')+' btn-sm" onclick="togglePublish(\''+esc(a.id)+'\','+(pub?'false':'true')+')">'+(pub?'UNPUBLISH':'PUBLISH')+'</button>'+
+      '<button class="btn btn-danger btn-sm" onclick="deleteAnnouncement(\''+esc(a.id)+'\')">DELETE</button></div></div>';
+  }).join('');
+}
+function editAnnouncement(id){
+  const a=adminAnnCache.filter(function(x){ return x.id===id; })[0]; if(!a) return;
+  editingAnnId=id; $('annFormTitle').textContent='EDIT ANNOUNCEMENT';
+  $('annTitle').value=a.title||''; $('annCat').value=a.category||''; $('annBody').value=a.body||'';
+  $('annTitle').scrollIntoView({behavior:'smooth'});
+}
+async function togglePublish(id,state){
+  try{ await db.collection('announcements').doc(id).update({published:state,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(state?'Published.':'Unpublished.'); }
+  catch(err){ showToast(friendlyError(err)); }
+}
+async function deleteAnnouncement(id){
+  if(!confirm('Delete this announcement permanently?')) return;
+  try{ await db.collection('announcements').doc(id).delete(); showToast('Announcement deleted.'); }
+  catch(err){ showToast(friendlyError(err)); }
+}
+
+/* ---- Admin: gallery ---- */
+let galleryDraft={};
+function renderAdminGallery(){
+  const box=$('adminGalleryBox'); if(!box) return;
+  if(box.querySelector('.ed-card') && Object.keys(galleryDraft).length) return;   // don't wipe unsaved edits
+  let html='';
+  for(let n=1;n<=6;n++){
+    const g=galleryCache[String(n)]||{};
+    html+='<div class="ed-card"><h3 style="margin-bottom:8px">EDUCATION GALLERY '+n+'</h3>'+
+      '<div id="gPrev'+n+'" style="margin-bottom:8px">'+(g.imageBase64?'<img src="'+esc(g.imageBase64)+'" style="width:100%;height:160px;object-fit:cover;border-radius:6px">':'<div class="placeholder" style="min-height:120px">'+n+'</div>')+'</div>'+
+      '<input type="file" accept="image/*" onchange="pickGalleryImage('+n+',this)">'+
+      '<label>Title</label><input class="control" id="gTitle'+n+'" value="'+esc(g.title||'')+'" placeholder="Education Gallery '+n+'">'+
+      '<label>Description (optional)</label><textarea class="control" id="gDesc'+n+'">'+esc(g.description||'')+'</textarea>'+
+      '<div class="row-actions"><button class="btn btn-green btn-sm" onclick="saveGallerySlot('+n+')">SAVE</button><button class="btn btn-danger btn-sm" onclick="clearGalleryImage('+n+')">REMOVE PHOTO</button></div>'+
+      '<div id="gStatus'+n+'" style="margin-top:8px"></div></div>';
+  }
+  box.innerHTML=html;
+}
+async function pickGalleryImage(n,input){
+  const file=input.files[0]; if(!file) return;
+  setStatus('gStatus'+n,'Processing photo…','');
+  try{
+    const url=await resizeImage(file,{size:900,square:false,quality:0.75});
+    if(url.length>750000){ setStatus('gStatus'+n,'Photo is too large. Choose a smaller image.','error'); return; }
+    galleryDraft[n]=url;
+    $('gPrev'+n).innerHTML='<img src="'+url+'" style="width:100%;height:160px;object-fit:cover;border-radius:6px">';
+    setStatus('gStatus'+n,'Photo ready. Press SAVE to publish it.','');
+  }catch(err){ setStatus('gStatus'+n,err.message,'error'); }
+}
+async function saveGallerySlot(n){
+  const data={title:val('gTitle'+n),description:val('gDesc'+n),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+  if(galleryDraft[n]) data.imageBase64=galleryDraft[n];
+  setStatus('gStatus'+n,'Saving…','');
+  try{
+    await withTimeout(db.collection('gallery').doc(String(n)).set(data,{merge:true}),15000,'Saving');
+    delete galleryDraft[n];
+    setStatus('gStatus'+n,'Saved. The public gallery is updated.','success');
+  }catch(err){ setStatus('gStatus'+n,friendlyError(err),'error'); }
+}
+async function clearGalleryImage(n){
+  if(!confirm('Remove the photo from Education Gallery '+n+'?')) return;
+  try{
+    await db.collection('gallery').doc(String(n)).set({imageBase64:''},{merge:true});
+    delete galleryDraft[n];
+    $('gPrev'+n).innerHTML='<div class="placeholder" style="min-height:120px">'+n+'</div>';
+    setStatus('gStatus'+n,'Photo removed.','success');
+  }catch(err){ setStatus('gStatus'+n,friendlyError(err),'error'); }
+}
+
+/* ---- Admin: questions ---- */
+function renderAdminQuestions(items){
+  const box=$('adminQuestions');
+  if(!items.length){ box.innerHTML='<p style="color:var(--muted)">No questions from students yet.</p>'; return; }
+  const pending=items.filter(function(q){ return q.status!=='answered'; });
+  const done=items.filter(function(q){ return q.status==='answered'; });
+  function card(q){
+    return '<div class="q-item '+(q.status==='answered'?'answered':'')+'"><small>'+esc(q.name)+' • '+esc(q.matric)+(q.course?' • '+esc(q.course):'')+'</small>'+
+      '<p style="color:var(--text);margin:6px 0">'+esc(q.text)+'</p>'+
+      '<textarea class="control" id="ans_'+esc(q.id)+'" placeholder="Type the answer…" style="min-height:70px">'+esc(q.answer||'')+'</textarea>'+
+      '<div class="row-actions"><button class="btn btn-green btn-sm" onclick="answerQuestion(\''+esc(q.id)+'\')">'+(q.status==='answered'?'UPDATE ANSWER':'SEND ANSWER')+'</button></div></div>';
+  }
+  box.innerHTML='<h3 class="sem-title">PENDING ('+pending.length+')</h3>'+(pending.map(card).join('')||'<p style="color:var(--muted)">No pending questions.</p>')+
+    '<h3 class="sem-title">ANSWERED ('+done.length+')</h3>'+(done.map(card).join('')||'<p style="color:var(--muted)">None yet.</p>');
+}
+async function answerQuestion(id){
+  const ans=($('ans_'+id).value||'').trim();
+  if(!ans){ showToast('Type an answer first.'); return; }
+  try{ await db.collection('questions').doc(id).update({answer:ans,status:'answered',answeredAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast('Answer sent.'); }
+  catch(err){ showToast(friendlyError(err)); }
+}
+
+/* ---- Admin: officers ---- */
+function renderOfficersEditor(){
+  $('ofDean').value=officersData.dean; $('ofFacultyExam').value=officersData.facultyExam; $('ofHod').value=officersData.hod;
+  $('ofDeptExam').value=officersData.deptExam; $('ofLevelAdviser').value=officersData.levelAdviser;
+}
+async function saveOfficers(){
+  const data={dean:val('ofDean'),facultyExam:val('ofFacultyExam'),hod:val('ofHod'),deptExam:val('ofDeptExam'),levelAdviser:val('ofLevelAdviser')};
+  setStatus('ofStatus','Saving…','');
+  try{
+    await withTimeout(db.collection('siteContent').doc('officers').set(data),15000,'Saving');
+    setStatus('ofStatus','Officers updated.','success');
+  }catch(err){ setStatus('ofStatus',friendlyError(err),'error'); }
+}
+
+/* ===================== MODALS / TOAST / MISC ===================== */
+function openModal(id){ $(id).classList.add('show'); }
+function closeModal(id){ $(id).classList.remove('show'); }
+document.querySelectorAll('.modal').forEach(function(m){
+  m.addEventListener('click',function(e){ if(e.target===m) m.classList.remove('show'); });
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') document.querySelectorAll('.modal.show').forEach(function(m){ m.classList.remove('show'); });
+});
+function submitContact(e){
+  e.preventDefault();
+  e.target.reset();
+  showToast('Message sent. The department will respond soon.');
+}
+function preview(input,targetId){
+  const file=input.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    $(targetId).outerHTML='<img src="'+ev.target.result+'" id="'+targetId+'" style="width:100%;border-radius:6px;max-height:260px;object-fit:cover">';
+  };
+  reader.readAsDataURL(file);
+}
+let toastTimer;
+function showToast(msg){
+  const t=$('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){ t.classList.remove('show'); },3600);
+}
+
+/* ===================== INIT ===================== */
+applyNav('public');
+showPublicControls();
+renderEvents();
+renderTestimonials();
+renderResources();
+renderGalleryPublic();
+renderAnnouncements();
+renderOfficers();
+addGpaRow();
+addGpaRow();
+$('pendingCount').textContent='—';
+$('answeredCount').textContent='—';
+updateBreadcrumb('home');
+
+</script>
+</body>
+</html>
