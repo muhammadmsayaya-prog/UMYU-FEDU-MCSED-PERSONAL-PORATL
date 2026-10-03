@@ -1272,7 +1272,7 @@ function renderResources(){
     </div>`).join('');
 }
 
-/* ===================== GPA CHECKER ===================== */
+/* ===================== GPA CALCULATOR ===================== */
 function addGpaRow(){
   gpaRowCount++;
   const id='gpa'+gpaRowCount;
@@ -1492,9 +1492,8 @@ async function doStudentRegister(){
   const level=$('srLevel').value;
   const pass=$('srPass').value, pass2=$('srPass2').value;
   if(!name||!matric||!email||!dept||!level||!pass||!pass2){ setStatus('sRegisterStatus','Please fill in every field.','error'); return; }
-  if(!/^[A-Z0-9][A-Z0-9\/\-.]{4,}$/.test(matric)){ setStatus('sRegisterStatus','Please enter a valid Matric Number (letters, numbers and / only).','error'); return; }
-  const other = dept==='CSED' ? 'MTHED' : 'CSED';
-  if(matric.indexOf(other)!==-1){ setStatus('sRegisterStatus','This Matric Number belongs to '+other+' but you selected '+dept+'. Please check your department.','error'); return; }
+  const matricPattern = new RegExp('^U\\d+\\/\\d+\\/'+dept+'\\/\\d+$');
+  if(!matricPattern.test(matric)){ setStatus('sRegisterStatus','Matric Number must look like U1/23/'+dept+'/0755 (numbers can vary, but the format and department code must match exactly).','error'); return; }
   if(pass.length<6){ setStatus('sRegisterStatus','Password must be at least 6 characters.','error'); return; }
   if(pass!==pass2){ setStatus('sRegisterStatus','Passwords do not match.','error'); return; }
   setStatus('sRegisterStatus','Creating your account…','');
